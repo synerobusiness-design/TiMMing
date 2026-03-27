@@ -553,19 +553,35 @@ function updateHeader(){
 function startGoogleLogin(){
   var btn=document.getElementById('signin-btn'),loading=document.getElementById('login-loading'),errEl=document.getElementById('login-error');
   btn.style.display='none';loading.classList.remove('hidden');errEl.classList.add('hidden');
-  try{
-    var client=google.accounts.oauth2.initTokenClient({
-      client_id:GCI,scope:'openid profile email '+GSCOPE,
-      callback:function(resp){
-        if(resp&&resp.access_token){
-          gToken=resp.access_token;fetchGoogleProfile(gToken);
-        }else{showLoginError('Sign in cancelled. Please try again.');resetLoginBtn();}
-      },
-      error_callback:function(){showLoginError('Sign in failed. Please try again.');resetLoginBtn();}
-    });
-    client.requestAccessToken({prompt:'select_account'});
-  }catch(e){
-    showLoginError('Google Sign-In not ready. Wait 2 seconds and try again.');resetLoginBtn();
+  waitForGSI(function(){
+    try{
+      var client=google.accounts.oauth2.initTokenClient({
+        client_id:GCI,scope:'openid profile email '+GSCOPE,
+        callback:function(resp){
+          if(resp&&resp.access_token){
+            gToken=resp.access_token;fetchGoogleProfile(gToken);
+          }else{showLoginError('Sign in cancelled. Please try again.');resetLoginBtn();}
+        },
+        error_callback:function(e){
+          showLoginError('Sign in failed. Please try again.');resetLoginBtn();
+        }
+      });
+      client.requestAccessToken({prompt:'select_account'});
+    }catch(e){
+      showLoginError('Sign in failed. Please try again.');resetLoginBtn();
+    }
+  });
+}
+
+function waitForGSI(cb,attempts){
+  attempts=attempts||0;
+  if(typeof google!=='undefined'&&google.accounts&&google.accounts.oauth2){
+    cb();
+  } else if(attempts<20){
+    setTimeout(function(){waitForGSI(cb,attempts+1);},300);
+  } else {
+    showLoginError('Google services not loaded. Check internet and refresh page.');
+    resetLoginBtn();
   }
 }
 function fetchGoogleProfile(token){
