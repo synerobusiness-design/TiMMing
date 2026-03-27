@@ -555,7 +555,10 @@ function startGoogleLogin(){
   // Save current state hint
   sessionStorage.setItem('timming_signing_in','1');
   // Build redirect URI — must exactly match Google Console
-  var redirectUri='https://synerobusiness-design.github.io/TiMMing/';
+  // Build redirect URI dynamically from current page URL
+  var redirectUri=window.location.origin+window.location.pathname;
+  // Ensure trailing slash
+  if(!redirectUri.endsWith('/'))redirectUri+='/';
   var params=[
     'client_id='+encodeURIComponent(GCI),
     'redirect_uri='+encodeURIComponent(redirectUri),
@@ -1037,6 +1040,35 @@ function handleRestore(input){
 
 // ─── INIT ───────────────────────────────────────────────────────
 updateThemeUI();
+// MUST run first — check if returning from Google OAuth redirect
+(function(){
+  var hash = window.location.hash || '';
+  var search = window.location.search || '';
+  var full = hash + search;
+  // Try both # and ? token locations
+  var token = null;
+  if(full.includes('access_token')){
+    var str = full.replace('#','').replace('?','');
+    var p = new URLSearchParams(str);
+    token = p.get('access_token');
+  }
+  if(token){
+    // We have a token — clean URL immediately
+    history.replaceState(null, null, location.pathname);
+    // Hide login screen sign-in button, show loading
+    var btn = document.getElementById('signin-btn');
+    var loading = document.getElementById('login-loading');
+    var ls = document.getElementById('login-screen');
+    if(btn) btn.style.display = 'none';
+    if(loading) loading.classList.remove('hidden');
+    // Set token and fetch profile
+    gToken = token;
+    // Wait for DOM then fetch
+    setTimeout(function(){
+      fetchGoogleProfile(token);
+    }, 100);
+  }
+})();
 </script>
 </body>
 </html>
