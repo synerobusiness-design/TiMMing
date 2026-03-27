@@ -551,41 +551,16 @@ function updateHeader(){
 
 // ─── LOGIN FLOW ────────────────────────────────────────────────
 function startGoogleLogin(){
-  var btn=document.getElementById('signin-btn');
-  var loading=document.getElementById('login-loading');
-  var errEl=document.getElementById('login-error');
-  if(btn)btn.style.display='none';
-  if(loading)loading.classList.remove('hidden');
-  if(errEl)errEl.classList.add('hidden');
-
-  // CRITICAL: initTokenClient + requestAccessToken MUST be called
-  // synchronously inside a user gesture (click) — NO setTimeout/delay
-  // otherwise mobile browser blocks the popup
-  if(typeof google==='undefined'||!google.accounts||!google.accounts.oauth2){
-    showLoginError('Google not loaded. Please refresh and try again.');
-    resetLoginBtn();
-    return;
-  }
-  var tokenClient=google.accounts.oauth2.initTokenClient({
-    client_id:GCI,
-    scope:'openid profile email '+GSCOPE,
-    callback:function(resp){
-      if(resp&&resp.access_token){
-        gToken=resp.access_token;
-        fetchGoogleProfile(gToken);
-      } else {
-        showLoginError('Cancelled. Please try again.');
-        resetLoginBtn();
-      }
-    },
-    error_callback:function(err){
-      var msg=err&&err.message?err.message:'unknown';
-      showLoginError('Error: '+msg);
-      resetLoginBtn();
-    }
-  });
-  // Call directly — no delay — this is what makes popup work on mobile
-  tokenClient.requestAccessToken({prompt:'select_account'});
+  // Pure redirect flow — most reliable on ALL mobile browsers
+  var redirectUri = 'https://synerobusiness-design.github.io/TiMMing/';
+  var url = 'https://accounts.google.com/o/oauth2/v2/auth'
+    + '?client_id=' + encodeURIComponent(GCI)
+    + '&redirect_uri=' + encodeURIComponent(redirectUri)
+    + '&response_type=token'
+    + '&scope=' + encodeURIComponent('openid profile email ' + GSCOPE)
+    + '&prompt=select_account'
+    + '&include_granted_scopes=true';
+  window.location.href = url;
 }
 
 
@@ -1079,43 +1054,39 @@ function handleRestore(input){
 
 // ─── TOKEN LOGIN HELPER ─────────────────────────────────────────
 function doTokenLogin(token){
+  gToken = token;
   var btn=document.getElementById('signin-btn');
   var loading=document.getElementById('login-loading');
-  var errEl=document.getElementById('login-error');
   if(btn)btn.style.display='none';
   if(loading)loading.classList.remove('hidden');
-  if(errEl)errEl.classList.add('hidden');
-  gToken=token;
   fetchGoogleProfile(token);
 }
 
 // ─── INIT ───────────────────────────────────────────────────────
 updateThemeUI();
-// MUST run first — check if returning from Google OAuth redirect
-(function(){
-  var hash = window.location.hash || '';
-  var search = window.location.search || '';
-  var full = hash + search;
-  // Try both # and ? token locations
+
+// Detect OAuth token in URL (redirect flow return)
+(function detectToken(){
+  var raw = window.location.href;
   var token = null;
-  if(full.includes('access_token')){
-    var str = full.replace('#','').replace('?','');
-    var p = new URLSearchParams(str);
-    token = p.get('access_token');
-  }
-  if(token){
-    // Clean URL immediately so token doesn't show in address bar
-    history.replaceState(null, null, location.pathname);
-    // Set token globally
-    gToken = token;
-    // Wait for DOM to fully render, then process login
-    window.addEventListener('DOMContentLoaded', function(){
-      doTokenLogin(token);
-    });
-    // If DOM already loaded
-    if(document.readyState === 'complete' || document.readyState === 'interactive'){
-      setTimeout(function(){ doTokenLogin(token); }, 50);
+
+  // Check hash fragment: #access_token=...
+  if(raw.indexOf('access_token=') !== -1){
+    var frag = raw.split('#')[1] || raw.split('?')[1] || '';
+    var pairs = frag.split('&');
+    for(var i=0;i<pairs.length;i++){
+      var kv = pairs[i].split('=');
+      if(kv[0]==='access_token'){ token = decodeURIComponent(kv[1]); break; }
     }
+  }
+
+  if(token){
+    // Clean up URL immediately
+    if(history.replaceState){
+      history.replaceState(null, '', location.pathname);
+    }
+    // Process token
+    doTokenLogin(token);
   }
 })();
 </script>
