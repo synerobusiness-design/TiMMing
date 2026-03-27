@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>TiMMing 2.0</title>
-<script src="https://accounts.google.com/gsi/client"></script>
+
 <style>
 :root{
   --bg:#08090E;--card:#111318;--card2:#181B22;--bdr:rgba(255,255,255,0.08);
@@ -557,53 +557,35 @@ function startGoogleLogin(){
   if(btn)btn.style.display='none';
   if(loading)loading.classList.remove('hidden');
   if(errEl)errEl.classList.add('hidden');
-  // Try GSI popup with retry
-  attemptGSI(0);
-}
 
-function attemptGSI(n){
-  // Check every 200ms, up to 15 seconds
-  if(n > 75){
-    showLoginError('Could not connect to Google. Check your internet and try again.');
+  // CRITICAL: initTokenClient + requestAccessToken MUST be called
+  // synchronously inside a user gesture (click) — NO setTimeout/delay
+  // otherwise mobile browser blocks the popup
+  if(typeof google==='undefined'||!google.accounts||!google.accounts.oauth2){
+    showLoginError('Google not loaded. Please refresh and try again.');
     resetLoginBtn();
     return;
   }
-  var ready = (
-    typeof google !== 'undefined' &&
-    google.accounts &&
-    google.accounts.oauth2 &&
-    typeof google.accounts.oauth2.initTokenClient === 'function'
-  );
-  if(!ready){
-    setTimeout(function(){ attemptGSI(n+1); }, 200);
-    return;
-  }
-  // GSI is ready — launch token popup
-  try{
-    var tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: GCI,
-      scope: 'openid profile email ' + GSCOPE,
-      callback: function(tokenResponse){
-        if(tokenResponse && tokenResponse.access_token){
-          gToken = tokenResponse.access_token;
-          fetchGoogleProfile(gToken);
-        } else {
-          showLoginError('Sign in was cancelled. Please try again.');
-          resetLoginBtn();
-        }
-      },
-      error_callback: function(err){
-        var msg = err && err.message ? err.message : 'unknown';
-        showLoginError('Google error: ' + msg + '. Please try again.');
+  var tokenClient=google.accounts.oauth2.initTokenClient({
+    client_id:GCI,
+    scope:'openid profile email '+GSCOPE,
+    callback:function(resp){
+      if(resp&&resp.access_token){
+        gToken=resp.access_token;
+        fetchGoogleProfile(gToken);
+      } else {
+        showLoginError('Cancelled. Please try again.');
         resetLoginBtn();
       }
-    });
-    // This opens Google popup — no redirect
-    tokenClient.requestAccessToken({ prompt: 'select_account' });
-  } catch(e){
-    showLoginError('Failed to start Google sign-in: ' + e.message);
-    resetLoginBtn();
-  }
+    },
+    error_callback:function(err){
+      var msg=err&&err.message?err.message:'unknown';
+      showLoginError('Error: '+msg);
+      resetLoginBtn();
+    }
+  });
+  // Call directly — no delay — this is what makes popup work on mobile
+  tokenClient.requestAccessToken({prompt:'select_account'});
 }
 
 
@@ -1137,5 +1119,6 @@ updateThemeUI();
   }
 })();
 </script>
+<script src="https://accounts.google.com/gsi/client"></script>
 </body>
 </html>
