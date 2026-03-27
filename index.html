@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>TiMMing 2.0</title>
-<script src="https://accounts.google.com/gsi/client" async></script>
+<script src="https://accounts.google.com/gsi/client" defer></script>
 <style>
 :root{
   --bg:#08090E;--card:#111318;--card2:#181B22;--bdr:rgba(255,255,255,0.08);
@@ -551,23 +551,59 @@ function updateHeader(){
 
 // ─── LOGIN FLOW ────────────────────────────────────────────────
 function startGoogleLogin(){
-  // REDIRECT FLOW — works on ALL devices including mobile
-  // Save current state hint
-  sessionStorage.setItem('timming_signing_in','1');
-  // Build redirect URI — must exactly match Google Console
-  // Build redirect URI dynamically from current page URL
-  var redirectUri=window.location.origin+window.location.pathname;
-  // Ensure trailing slash
+  var btn=document.getElementById('signin-btn');
+  var loading=document.getElementById('login-loading');
+  var errEl=document.getElementById('login-error');
+  btn.style.display='none';
+  loading.classList.remove('hidden');
+  errEl.classList.add('hidden');
+  tryGSILogin(0);
+}
+
+function tryGSILogin(attempt){
+  // Wait up to 10 seconds for GSI to load (mobile is slow)
+  if(attempt>40){
+    doRedirectLogin();
+    return;
+  }
+  if(typeof google==='undefined'||!google.accounts||!google.accounts.oauth2){
+    setTimeout(function(){tryGSILogin(attempt+1);},250);
+    return;
+  }
+  try{
+    var client=google.accounts.oauth2.initTokenClient({
+      client_id:GCI,
+      scope:'openid profile email '+GSCOPE,
+      callback:function(resp){
+        if(resp&&resp.access_token){
+          gToken=resp.access_token;
+          fetchGoogleProfile(gToken);
+        } else {
+          resetLoginBtn();
+          showLoginError('Sign in cancelled. Try again.');
+        }
+      },
+      error_callback:function(err){
+        doRedirectLogin();
+      }
+    });
+    client.requestAccessToken({prompt:'select_account'});
+  } catch(e){
+    doRedirectLogin();
+  }
+}
+
+function doRedirectLogin(){
+  var redirectUri=location.origin+location.pathname;
   if(!redirectUri.endsWith('/'))redirectUri+='/';
-  var params=[
-    'client_id='+encodeURIComponent(GCI),
-    'redirect_uri='+encodeURIComponent(redirectUri),
-    'response_type=token',
-    'scope='+encodeURIComponent('openid profile email '+GSCOPE),
-    'prompt=select_account',
-    'include_granted_scopes=true'
-  ].join('&');
-  window.location.href='https://accounts.google.com/o/oauth2/v2/auth?'+params;
+  var url='https://accounts.google.com/o/oauth2/v2/auth'
+    +'?client_id='+encodeURIComponent(GCI)
+    +'&redirect_uri='+encodeURIComponent(redirectUri)
+    +'&response_type=token'
+    +'&scope='+encodeURIComponent('openid profile email '+GSCOPE)
+    +'&prompt=select_account'
+    +'&include_granted_scopes=true';
+  window.location.href=url;
 }
 
 // Called on page load — checks if returning from Google OAuth
@@ -656,7 +692,16 @@ function loadFromDrive(done){
     .then(function(text){
       var data;try{data=JSON.parse(text);}catch(e){throw new Error('Bad JSON');}
       if(data.entries&&Array.isArray(data.entries)&&data.entries.length>0)entries=data.entries;
-      if(data.cfg)cfg=Object.assign(cfg,data.cfg);
+      if(data.cfg){
+        // Load all saved config
+        if(data.cfg.currency)cfg.currency=data.cfg.currency;
+        if(data.cfg.regRate!==undefined)cfg.regRate=data.cfg.regRate;
+        if(data.cfg.unregRate!==undefined)cfg.unregRate=data.cfg.unregRate;
+        if(data.cfg.tax!==undefined)cfg.tax=data.cfg.tax;
+        if(data.cfg.goal!==undefined)cfg.goal=data.cfg.goal;
+        if(data.cfg.lang)cfg.lang=data.cfg.lang;
+        if(data.cfg.name)cfg.name=data.cfg.name;
+      }
       if(gUser)cfg.name=gUser.given_name||gUser.name||cfg.name;
       if(data.theme){
         if(typeof data.theme.isDark!=='undefined'){isDark=data.theme.isDark;document.documentElement.setAttribute('data-dark',isDark?'1':'0');updateThemeUI();}
@@ -996,11 +1041,15 @@ function saveSettings(){
   cfg.currency=document.getElementById('cfg-curr').value;
   cfg.regRate=+(document.getElementById('cfg-reg').value)||12.21;
   cfg.unregRate=+(document.getElementById('cfg-unreg').value)||7;
-  var tv=document.getElementById('cfg-tax').value;cfg.tax=tv===''?0:Math.max(0,+tv);
+  var tv=document.getElementById('cfg-tax').value;
+  cfg.tax=(tv===''||tv===null||tv===undefined)?0:Math.max(0,parseFloat(tv)||0);
   cfg.goal=+(document.getElementById('cfg-goal').value)||1400;
   cfg.lang=document.getElementById('cfg-lang').value||'en';
   document.getElementById('modal-settings').classList.add('hidden');
-  toast('✅ Settings saved');updateHeader();renderCurrent();triggerSave();
+  toast('✅ Settings saved');
+  updateHeader();renderCurrent();
+  // Force immediate Drive save (not delayed)
+  if(gToken) saveToDrive(function(){setSyncStatus('ok','Settings saved');});
 }
 function openResetConfirm(){document.getElementById('modal-settings').classList.add('hidden');document.getElementById('modal-reset').classList.remove('hidden');}
 function confirmReset(){
@@ -1045,7 +1094,16 @@ function handleRestore(input){
       var data=JSON.parse(ev.target.result);
       if(!data.entries||!Array.isArray(data.entries))throw new Error('Invalid file');
       entries=data.entries;
-      if(data.cfg)cfg=Object.assign(cfg,data.cfg);
+      if(data.cfg){
+        // Load all saved config
+        if(data.cfg.currency)cfg.currency=data.cfg.currency;
+        if(data.cfg.regRate!==undefined)cfg.regRate=data.cfg.regRate;
+        if(data.cfg.unregRate!==undefined)cfg.unregRate=data.cfg.unregRate;
+        if(data.cfg.tax!==undefined)cfg.tax=data.cfg.tax;
+        if(data.cfg.goal!==undefined)cfg.goal=data.cfg.goal;
+        if(data.cfg.lang)cfg.lang=data.cfg.lang;
+        if(data.cfg.name)cfg.name=data.cfg.name;
+      }
       if(gUser)cfg.name=gUser.given_name||gUser.name||cfg.name;
       if(data.theme){if(typeof data.theme.isDark!=='undefined'){isDark=data.theme.isDark;document.documentElement.setAttribute('data-dark',isDark?'1':'0');}if(data.theme.accentKey)setAccent(data.theme.accentKey);}
       selM=getMonths()[0]||new Date().toISOString().slice(0,7);
