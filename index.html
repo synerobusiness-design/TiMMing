@@ -601,8 +601,11 @@ function onSignedIn(){
   cfg.name=gUser.given_name||gUser.name||'User';
   setSyncStatus('ing','Loading...');
   loadFromDrive(function(){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.visibility='visible';
+    // Hide login, show app
+    var ls=document.getElementById('login-screen');
+    var app=document.getElementById('app');
+    if(ls){ls.style.display='none';ls.style.visibility='hidden';}
+    if(app){app.style.visibility='visible';app.style.display='block';}
     updateHeader();updateSettingsUI();startAutoSync();
     buildTimerIdle();
     toast('👋 Welcome, '+cfg.name+'!');
@@ -673,7 +676,23 @@ function loadFromDrive(done){
 function saveToDrive(done){
   if(!gToken)return;
   setSyncStatus('ing','Saving...');
-  var body=JSON.stringify({version:2,saved:new Date().toISOString(),cfg:cfg,entries:entries,theme:{isDark:isDark,accentKey:accentKey}});
+  // Make sure all cfg fields are included
+  var saveData={
+    version:2,
+    saved:new Date().toISOString(),
+    cfg:{
+      currency:cfg.currency,
+      regRate:cfg.regRate,
+      unregRate:cfg.unregRate,
+      tax:cfg.tax,
+      name:cfg.name,
+      goal:cfg.goal,
+      lang:cfg.lang||'en'
+    },
+    entries:entries,
+    theme:{isDark:isDark,accentKey:accentKey}
+  };
+  var body=JSON.stringify(saveData);
   findFile(function(err,fid){
     var url,method;
     if(fid){url='https://www.googleapis.com/upload/drive/v3/files/'+fid+'?uploadType=media';method='PATCH';}
@@ -1038,6 +1057,18 @@ function handleRestore(input){
   reader.readAsText(file);
 }
 
+// ─── TOKEN LOGIN HELPER ─────────────────────────────────────────
+function doTokenLogin(token){
+  var btn=document.getElementById('signin-btn');
+  var loading=document.getElementById('login-loading');
+  var errEl=document.getElementById('login-error');
+  if(btn)btn.style.display='none';
+  if(loading)loading.classList.remove('hidden');
+  if(errEl)errEl.classList.add('hidden');
+  gToken=token;
+  fetchGoogleProfile(token);
+}
+
 // ─── INIT ───────────────────────────────────────────────────────
 updateThemeUI();
 // MUST run first — check if returning from Google OAuth redirect
@@ -1053,20 +1084,18 @@ updateThemeUI();
     token = p.get('access_token');
   }
   if(token){
-    // We have a token — clean URL immediately
+    // Clean URL immediately so token doesn't show in address bar
     history.replaceState(null, null, location.pathname);
-    // Hide login screen sign-in button, show loading
-    var btn = document.getElementById('signin-btn');
-    var loading = document.getElementById('login-loading');
-    var ls = document.getElementById('login-screen');
-    if(btn) btn.style.display = 'none';
-    if(loading) loading.classList.remove('hidden');
-    // Set token and fetch profile
+    // Set token globally
     gToken = token;
-    // Wait for DOM then fetch
-    setTimeout(function(){
-      fetchGoogleProfile(token);
-    }, 100);
+    // Wait for DOM to fully render, then process login
+    window.addEventListener('DOMContentLoaded', function(){
+      doTokenLogin(token);
+    });
+    // If DOM already loaded
+    if(document.readyState === 'complete' || document.readyState === 'interactive'){
+      setTimeout(function(){ doTokenLogin(token); }, 50);
+    }
   }
 })();
 </script>
