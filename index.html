@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>TiMMing 2.0</title>
-<script src="https://accounts.google.com/gsi/client" defer></script>
+<script src="https://accounts.google.com/gsi/client"></script>
 <style>
 :root{
   --bg:#08090E;--card:#111318;--card2:#181B22;--bdr:rgba(255,255,255,0.08);
@@ -554,79 +554,59 @@ function startGoogleLogin(){
   var btn=document.getElementById('signin-btn');
   var loading=document.getElementById('login-loading');
   var errEl=document.getElementById('login-error');
-  btn.style.display='none';
-  loading.classList.remove('hidden');
-  errEl.classList.add('hidden');
-  tryGSILogin(0);
+  if(btn)btn.style.display='none';
+  if(loading)loading.classList.remove('hidden');
+  if(errEl)errEl.classList.add('hidden');
+  // Try GSI popup with retry
+  attemptGSI(0);
 }
 
-function tryGSILogin(attempt){
-  // Wait up to 10 seconds for GSI to load (mobile is slow)
-  if(attempt>40){
-    doRedirectLogin();
+function attemptGSI(n){
+  // Check every 200ms, up to 15 seconds
+  if(n > 75){
+    showLoginError('Could not connect to Google. Check your internet and try again.');
+    resetLoginBtn();
     return;
   }
-  if(typeof google==='undefined'||!google.accounts||!google.accounts.oauth2){
-    setTimeout(function(){tryGSILogin(attempt+1);},250);
+  var ready = (
+    typeof google !== 'undefined' &&
+    google.accounts &&
+    google.accounts.oauth2 &&
+    typeof google.accounts.oauth2.initTokenClient === 'function'
+  );
+  if(!ready){
+    setTimeout(function(){ attemptGSI(n+1); }, 200);
     return;
   }
+  // GSI is ready — launch token popup
   try{
-    var client=google.accounts.oauth2.initTokenClient({
-      client_id:GCI,
-      scope:'openid profile email '+GSCOPE,
-      callback:function(resp){
-        if(resp&&resp.access_token){
-          gToken=resp.access_token;
+    var tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GCI,
+      scope: 'openid profile email ' + GSCOPE,
+      callback: function(tokenResponse){
+        if(tokenResponse && tokenResponse.access_token){
+          gToken = tokenResponse.access_token;
           fetchGoogleProfile(gToken);
         } else {
+          showLoginError('Sign in was cancelled. Please try again.');
           resetLoginBtn();
-          showLoginError('Sign in cancelled. Try again.');
         }
       },
-      error_callback:function(err){
-        doRedirectLogin();
+      error_callback: function(err){
+        var msg = err && err.message ? err.message : 'unknown';
+        showLoginError('Google error: ' + msg + '. Please try again.');
+        resetLoginBtn();
       }
     });
-    client.requestAccessToken({prompt:'select_account'});
+    // This opens Google popup — no redirect
+    tokenClient.requestAccessToken({ prompt: 'select_account' });
   } catch(e){
-    doRedirectLogin();
+    showLoginError('Failed to start Google sign-in: ' + e.message);
+    resetLoginBtn();
   }
 }
 
-function doRedirectLogin(){
-  var redirectUri=location.origin+location.pathname;
-  if(!redirectUri.endsWith('/'))redirectUri+='/';
-  var url='https://accounts.google.com/o/oauth2/v2/auth'
-    +'?client_id='+encodeURIComponent(GCI)
-    +'&redirect_uri='+encodeURIComponent(redirectUri)
-    +'&response_type=token'
-    +'&scope='+encodeURIComponent('openid profile email '+GSCOPE)
-    +'&prompt=select_account'
-    +'&include_granted_scopes=true';
-  window.location.href=url;
-}
 
-// Called on page load — checks if returning from Google OAuth
-function checkOAuthReturn(){
-  var hash=window.location.hash;
-  if(hash&&hash.includes('access_token')){
-    var params=new URLSearchParams(hash.substring(1));
-    var token=params.get('access_token');
-    if(token){
-      history.replaceState(null,null,location.pathname);
-      sessionStorage.removeItem('timming_signing_in');
-      // Show loading state on login screen while we fetch profile
-      var btn=document.getElementById('signin-btn');
-      var loading=document.getElementById('login-loading');
-      if(btn)btn.style.display='none';
-      if(loading)loading.classList.remove('hidden');
-      gToken=token;
-      fetchGoogleProfile(token);
-      return true;
-    }
-  }
-  return false;
-}
 function fetchGoogleProfile(token){
   fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{'Authorization':'Bearer '+token}})
   .then(function(r){return r.json();})
