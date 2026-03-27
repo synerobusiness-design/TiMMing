@@ -551,16 +551,15 @@ function updateHeader(){
 
 // ─── LOGIN FLOW ────────────────────────────────────────────────
 function startGoogleLogin(){
-  // Pure redirect flow — most reliable on ALL mobile browsers
+  // Pure redirect — no GSI needed, works on ALL devices
   var redirectUri = 'https://synerobusiness-design.github.io/TiMMing/';
-  var url = 'https://accounts.google.com/o/oauth2/v2/auth'
+  window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth'
     + '?client_id=' + encodeURIComponent(GCI)
     + '&redirect_uri=' + encodeURIComponent(redirectUri)
     + '&response_type=token'
     + '&scope=' + encodeURIComponent('openid profile email ' + GSCOPE)
     + '&prompt=select_account'
     + '&include_granted_scopes=true';
-  window.location.href = url;
 }
 
 
@@ -1090,6 +1089,5 @@ updateThemeUI();
   }
 })();
 </script>
-<script src="https://accounts.google.com/gsi/client"></script>
 </body>
 </html>
