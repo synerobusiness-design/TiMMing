@@ -14,7 +14,6 @@
   --yel:#FCD34D;--yeld:rgba(252,211,77,0.12);
   --grn:#4ADE80;--grnd:rgba(74,222,128,0.12);
   --ind:#818CF8;--indd:rgba(129,140,248,0.15);
-  --pur:#A78BFA;
 }
 [data-dark="0"]{
   --bg:#F0F4FA;--card:#FFFFFF;--card2:#E8EDF6;--bdr:rgba(0,0,0,0.09);
@@ -29,11 +28,18 @@
 [data-accent="blue"]{--A:#38BDF8;--Ad:rgba(56,189,248,0.15);--At:#001a2e;}
 [data-accent="orange"]{--A:#FB923C;--Ad:rgba(251,146,60,0.15);--At:#1a0800;}
 [data-accent="pink"]{--A:#F472B6;--Ad:rgba(244,114,182,0.15);--At:#1a0010;}
+[data-accent="red"]{--A:#F87171;--Ad:rgba(248,113,113,0.15);--At:#fff;}
+[data-accent="teal"]{--A:#2DD4BF;--Ad:rgba(45,212,191,0.15);--At:#001a17;}
+[data-accent="yellow"]{--A:#FCD34D;--Ad:rgba(252,211,77,0.15);--At:#1a1000;}
 [data-dark="0"][data-accent="green"]{--A:#16A34A;--Ad:rgba(22,163,74,0.12);--At:#fff;}
 [data-dark="0"][data-accent="indigo"]{--A:#4F46E5;--Ad:rgba(79,70,229,0.12);--At:#fff;}
 [data-dark="0"][data-accent="blue"]{--A:#0284C7;--Ad:rgba(2,132,199,0.12);--At:#fff;}
 [data-dark="0"][data-accent="orange"]{--A:#EA580C;--Ad:rgba(234,88,12,0.12);--At:#fff;}
 [data-dark="0"][data-accent="pink"]{--A:#DB2777;--Ad:rgba(219,39,119,0.12);--At:#fff;}
+[data-dark="0"][data-accent="red"]{--A:#DC2626;--Ad:rgba(220,38,38,0.12);--At:#fff;}
+[data-dark="0"][data-accent="teal"]{--A:#0D9488;--Ad:rgba(13,148,136,0.12);--At:#fff;}
+[data-dark="0"][data-accent="yellow"]{--A:#D97706;--Ad:rgba(217,119,6,0.12);--At:#fff;}
+
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--tx);font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;min-height:100%;overscroll-behavior:none;transition:background-color 0.3s,color 0.3s}
 #app{max-width:430px;margin:0 auto;min-height:100vh}
@@ -56,7 +62,7 @@ select option{background:var(--card)}
 .nav-btn.active{color:var(--A);font-weight:700}
 .nav-icon{padding:4px 10px;border-radius:8px;font-size:18px}
 .nav-btn.active .nav-icon{background:var(--Ad)}
-.header{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--bdr);padding:12px 16px 10px}
+.header{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--bdr);padding:14px 16px 12px}
 .content{padding:18px 14px 100px}
 .reg-toggle{display:flex;background:rgba(128,128,128,0.1);border-radius:12px;padding:4px;gap:4px}
 .reg-btn{flex:1;padding:9px 8px;border-radius:9px;border:none;cursor:pointer;font-weight:700;font-size:12px;font-family:inherit;background:transparent;color:var(--mu)}
@@ -73,83 +79,125 @@ select option{background:var(--card)}
 .tsheet-table{width:100%;border-collapse:collapse;font-size:12px}
 .tsheet-table th{color:var(--mu);font-weight:700;font-size:10px;letter-spacing:0.6px;text-transform:uppercase;padding:8px 6px;border-bottom:1px solid var(--bdr);text-align:left}
 .tsheet-table td{padding:9px 6px;border-bottom:1px solid var(--bdr);color:var(--tx)}
-.tsheet-table tr:last-child td{border-bottom:none}
 .tsheet-table .tot-row td{font-weight:800;color:var(--A);border-top:2px solid var(--bdr)}
-.theme-dot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;flex-shrink:0;transition:transform 0.15s,border-color 0.15s}
-.theme-dot.active{border-color:var(--tx);transform:scale(1.15)}
-.backup-zone{border:2px dashed var(--bdr);border-radius:14px;padding:18px;text-align:center;cursor:pointer;transition:border-color 0.2s}
-.backup-zone:hover{border-color:var(--A)}
-/* SYNC STATUS */
-.sync-pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;display:flex;align-items:center;gap:4px;transition:all 0.3s}
+.theme-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;flex-shrink:0;transition:transform 0.15s,border-color 0.15s}
+.theme-dot.active{border-color:var(--tx);transform:scale(1.18)}
+.sync-pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;display:flex;align-items:center;gap:4px}
 .sp-ok{background:var(--Ad);color:var(--A)}
 .sp-ing{background:var(--yeld);color:var(--yel)}
 .sp-err{background:var(--redd);color:var(--red)}
 .sp-off{background:var(--dim);color:var(--mu)}
+.settings-section{background:var(--card2);border-radius:16px;overflow:hidden;margin-bottom:12px}
+.settings-row{display:flex;align-items:center;padding:14px 16px;cursor:pointer;transition:background 0.15s;border-bottom:1px solid var(--bdr);gap:12px}
+.settings-row:last-child{border-bottom:none}
+.settings-row:active{background:var(--dim)}
+.settings-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+
 /* LOGIN SCREEN */
 #login-screen{
   position:fixed;inset:0;z-index:9999;
-  background:var(--bg);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:40px 28px;max-width:430px;margin:0 auto;left:50%;transform:translateX(-50%);width:100%;
+  padding:40px 28px;
+  overflow:hidden;
 }
-.login-logo{
-  width:90px;height:90px;border-radius:26px;background:var(--A);
-  display:flex;align-items:center;justify-content:center;font-size:44px;
-  margin-bottom:28px;box-shadow:0 16px 48px var(--Ad);
+#login-screen::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,#0a0f1a 0%,#0d1420 40%,#0a1208 100%);
+  z-index:0;
 }
-.login-title{font-size:34px;font-weight:900;color:var(--tx);letter-spacing:-1.5px;margin-bottom:8px;text-align:center}
-.login-sub{font-size:14px;color:var(--mu);text-align:center;line-height:1.7;margin-bottom:44px;max-width:280px}
+.login-glow{
+  position:absolute;width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(110,229,71,0.12) 0%,transparent 70%);
+  top:-100px;right:-100px;z-index:0;pointer-events:none;
+}
+.login-glow2{
+  position:absolute;width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(129,140,248,0.08) 0%,transparent 70%);
+  bottom:-80px;left:-80px;z-index:0;pointer-events:none;
+}
+.login-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;max-width:360px;}
+.login-logo-wrap{
+  width:100px;height:100px;border-radius:28px;
+  background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:28px;
+  box-shadow:0 20px 60px rgba(110,229,71,0.25),0 8px 24px rgba(0,0,0,0.4);
+}
+.login-title{font-size:36px;font-weight:900;color:#fff;letter-spacing:-1.5px;margin-bottom:8px;text-align:center}
+.login-title span{color:#6EE547}
+.login-sub{font-size:14px;color:rgba(255,255,255,0.45);text-align:center;line-height:1.7;margin-bottom:48px}
 .g-btn{
-  width:100%;padding:16px 20px;border-radius:16px;
-  background:#fff;border:1.5px solid #dadce0;
-  color:#3c4043;font-weight:600;font-size:15px;
+  width:100%;padding:16px 20px;border-radius:18px;
+  background:rgba(255,255,255,0.95);
+  border:none;
+  color:#1f1f1f;font-weight:700;font-size:15px;
   cursor:pointer;font-family:inherit;
   display:flex;align-items:center;justify-content:center;gap:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.1);
-  transition:box-shadow 0.2s,transform 0.1s;
-  -webkit-user-select:none;user-select:none;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  transition:transform 0.15s,box-shadow 0.15s;
 }
-.g-btn:active{transform:scale(0.98);box-shadow:0 1px 4px rgba(0,0,0,0.1)}
-.login-note{font-size:11px;color:var(--mu);text-align:center;margin-top:20px;line-height:1.7;max-width:260px}
+.g-btn:active{transform:scale(0.97);box-shadow:0 2px 10px rgba(0,0,0,0.2)}
+.login-note{font-size:11px;color:rgba(255,255,255,0.25);text-align:center;margin-top:20px;line-height:1.7;max-width:260px}
+.login-dots{display:flex;gap:6px;margin-top:32px;}
+.login-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.15)}
+.login-dot.a{background:#6EE547;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
 </style>
 </head>
 <body>
 
 <!-- LOGIN SCREEN -->
 <div id="login-screen">
-  <div class="login-logo">⏱</div>
-  <div class="login-title">TiMMing 2.0</div>
-  <div class="login-sub">Track shifts, breaks & earnings.<br>Sign in to sync your data.</div>
-  <button class="g-btn" id="signin-btn" onclick="startGoogleLogin()">
-    <svg width="20" height="20" viewBox="0 0 48 48">
-      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-    </svg>
-    Sign in with Google
-  </button>
-  <div id="login-loading" class="hidden" style="margin-top:16px;font-size:13px;color:var(--mu)">🔄 Signing in...</div>
-  <div id="login-error" class="hidden" style="margin-top:12px;font-size:12px;color:var(--red);text-align:center;max-width:280px"></div>
-  <div class="login-note">Your data is saved securely in your own Google Drive. Nobody else can access it.</div>
+  <div class="login-glow"></div>
+  <div class="login-glow2"></div>
+  <div class="login-content">
+    <div class="login-logo-wrap">
+      <!-- TiMMing T Logo -->
+      <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Top horizontal bar of T -->
+        <rect x="8" y="10" width="52" height="20" rx="3" fill="#FBBF5C"/>
+        <!-- Stem of T - trapezoidal (wider top, narrower bottom) -->
+        <polygon points="26,30 42,30 38,58 30,58" fill="#FBBF5C"/>
+      </svg>
+    </div>
+    <div class="login-title">TiM<span>M</span>ing</div>
+    <div class="login-sub">Track shifts, breaks & earnings<br>Everything synced to your Google Drive</div>
+    <button class="g-btn" id="signin-btn" onclick="startGoogleLogin()">
+      <svg width="20" height="20" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Sign in with Google
+    </button>
+    <div id="login-loading" class="hidden" style="margin-top:16px;font-size:13px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:8px">
+      <div class="login-dots"><div class="login-dot a"></div><div class="login-dot"></div><div class="login-dot"></div></div>
+      Signing in...
+    </div>
+    <div id="login-error" class="hidden" style="margin-top:12px;font-size:12px;color:#F87171;text-align:center;max-width:280px;background:rgba(248,113,113,0.1);padding:10px 14px;border-radius:10px;border:1px solid rgba(248,113,113,0.2)"></div>
+    <div class="login-note">Your data stays private in your own Google Drive</div>
+  </div>
 </div>
 
 <!-- MAIN APP -->
 <div id="app" style="visibility:hidden">
   <div class="header">
     <div class="row" style="justify-content:space-between;align-items:center">
-      <div class="row" style="gap:10px">
-        <div style="width:34px;height:34px;border-radius:10px;background:var(--A);display:flex;align-items:center;justify-content:center;font-size:17px">⏱</div>
-        <div class="col">
-          <div style="font-size:17px;font-weight:900;color:var(--tx);line-height:1.1">TiMMing <span style="color:var(--A)">2.0</span></div>
-          <div id="live-status" class="hidden" style="font-size:9px;color:var(--A);font-weight:700;letter-spacing:0.5px"></div>
-        </div>
+      <div class="col" style="gap:2px">
+        <div id="hdr-greeting" style="font-size:13px;color:var(--mu);font-weight:600"></div>
+        <div id="hdr-name-big" style="font-size:22px;font-weight:900;color:var(--tx);letter-spacing:-0.5px;line-height:1.1"></div>
       </div>
-      <div class="row" style="gap:6px">
+      <div class="row" style="gap:8px">
         <div id="sync-pill" class="sync-pill sp-off">
           <span id="sync-icon">○</span><span id="sync-txt">Offline</span>
         </div>
-        <button onclick="openSettings()" style="background:var(--card2);border:1px solid var(--bdr);border-radius:9px;width:32px;height:32px;cursor:pointer;color:var(--mu);display:flex;align-items:center;justify-content:center;font-size:15px">⚙️</button>
+        <button onclick="openSettings()" style="background:none;border:none;cursor:pointer;padding:0;position:relative">
+          <div id="hdr-avatar-wrap" style="width:36px;height:36px;border-radius:50%;background:var(--Ad);border:2px solid var(--A);overflow:hidden;display:flex;align-items:center;justify-content:center">
+            <img id="hdr-avatar" src="" style="width:100%;height:100%;object-fit:cover;display:none">
+            <span id="hdr-avatar-letter" style="font-size:15px;font-weight:800;color:var(--A)">?</span>
+          </div>
+        </button>
       </div>
     </div>
   </div>
@@ -158,7 +206,7 @@ select option{background:var(--card)}
     <button class="nav-btn active" id="nav-timer" onclick="switchTab('timer')"><div class="nav-icon">⏱</div>Timer</button>
     <button class="nav-btn" id="nav-dashboard" onclick="switchTab('dashboard')"><div class="nav-icon">📊</div>Overview</button>
     <button class="nav-btn" id="nav-shifts" onclick="switchTab('shifts')"><div class="nav-icon">📅</div>Shifts</button>
-    <button class="nav-btn" id="nav-sheet" onclick="switchTab('sheet')"><div class="nav-icon">🗂</div>Timesheet</button>
+    <button class="nav-btn" id="nav-sheet" onclick="switchTab('sheet')"><div class="nav-icon">🗂</div>Sheet</button>
     <button class="nav-btn" id="nav-analytics" onclick="switchTab('analytics')"><div class="nav-icon">📈</div>Stats</button>
   </div>
 </div>
@@ -260,7 +308,7 @@ select option{background:var(--card)}
     <div style="text-align:center;margin-bottom:24px">
       <div style="font-size:50px;margin-bottom:12px">⚠️</div>
       <div style="font-size:18px;font-weight:900;color:var(--tx);margin-bottom:8px">Reset All Data?</div>
-      <div style="color:var(--mu);font-size:13px;line-height:1.6">This will <strong style="color:var(--red)">permanently delete</strong> all shifts.<br>Drive data will also be cleared.</div>
+      <div style="color:var(--mu);font-size:13px;line-height:1.6">This will permanently delete all shifts.<br>Drive data will also be cleared.</div>
     </div>
     <button onclick="downloadBackup()" style="width:100%;padding:12px;border-radius:12px;background:var(--A);border:none;color:var(--At);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;margin-bottom:10px">💾 Download Backup First</button>
     <div class="row" style="gap:10px">
@@ -274,98 +322,149 @@ select option{background:var(--card)}
 <div id="modal-settings" class="modal-bg hidden" onclick="if(event.target===this)this.classList.add('hidden')">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="handle"></div>
-    <div style="font-size:20px;font-weight:900;color:var(--tx);margin-bottom:20px">⚙️ Settings</div>
+    <div style="font-size:20px;font-weight:900;color:var(--tx);margin-bottom:20px">Settings</div>
 
-    <!-- Google Account -->
-    <div style="background:var(--card2);border-radius:16px;padding:14px;margin-bottom:14px">
-      <div style="font-size:13px;font-weight:800;color:var(--tx);margin-bottom:10px">☁️ Google Account</div>
-      <div id="cfg-user" class="row" style="gap:10px;margin-bottom:10px">
-        <img id="cfg-avatar" src="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--dim)" onerror="this.style.display='none'">
-        <div class="col" style="flex:1;gap:2px">
-          <div id="cfg-name-display" style="font-size:13px;font-weight:700;color:var(--tx)"></div>
-          <div id="cfg-email-display" style="font-size:11px;color:var(--mu)"></div>
+    <!-- Account Card -->
+    <div style="background:linear-gradient(135deg,var(--Ad),rgba(0,0,0,0));border:1px solid var(--A);border-radius:20px;padding:18px;margin-bottom:16px">
+      <div class="row" style="gap:14px;margin-bottom:14px">
+        <div style="position:relative">
+          <img id="cfg-avatar" src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--A);display:block">
+          <div style="position:absolute;bottom:-2px;right:-2px;width:18px;height:18px;background:var(--A);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px">✓</div>
+        </div>
+        <div class="col" style="flex:1;gap:3px">
+          <div id="cfg-name-display" style="font-size:16px;font-weight:800;color:var(--tx)"></div>
+          <div id="cfg-email-display" style="font-size:12px;color:var(--mu)"></div>
+          <div id="sync-status-detail" style="font-size:11px;color:var(--A);margin-top:2px"></div>
         </div>
       </div>
-      <div id="cfg-sync-info" style="font-size:11px;color:var(--mu);margin-bottom:10px"></div>
       <button onclick="signOut()" style="width:100%;padding:10px;border-radius:12px;background:var(--redd);border:1px solid rgba(248,113,113,0.3);color:var(--red);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Sign Out</button>
     </div>
 
-    <!-- Theme -->
-    <div class="row" style="justify-content:space-between;align-items:center;background:var(--card2);border-radius:14px;padding:12px 14px;margin-bottom:14px">
-      <div class="row" style="gap:8px"><span id="theme-icon">🌙</span><span style="font-size:14px;font-weight:600;color:var(--tx)" id="theme-label">Dark Mode</span></div>
-      <button id="theme-toggle-btn" onclick="toggleDark()" style="width:50px;height:28px;border-radius:99px;border:none;cursor:pointer;position:relative;transition:background 0.3s">
-        <div id="theme-toggle-ball" style="width:22px;height:22px;border-radius:50%;background:#fff;position:absolute;top:3px;transition:left 0.3s;pointer-events:none"></div>
-      </button>
-    </div>
-
-    <!-- Accent -->
-    <label class="lbl" style="margin-bottom:10px">Accent Colour</label>
-    <div class="row" style="gap:12px;margin-bottom:18px;padding:12px;background:var(--card2);border-radius:14px">
-      <div class="theme-dot active" id="dot-green"  onclick="setAccent('green')"  style="background:#6EE547"></div>
-      <div class="theme-dot"        id="dot-indigo" onclick="setAccent('indigo')" style="background:#818CF8"></div>
-      <div class="theme-dot"        id="dot-blue"   onclick="setAccent('blue')"   style="background:#38BDF8"></div>
-      <div class="theme-dot"        id="dot-orange" onclick="setAccent('orange')" style="background:#FB923C"></div>
-      <div class="theme-dot"        id="dot-pink"   onclick="setAccent('pink')"   style="background:#F472B6"></div>
-    </div>
-
-    <label class="lbl">Currency</label>
-    <select id="cfg-curr" style="margin-bottom:12px">
-      <option value="GBP">£ GBP — British Pound</option>
-      <option value="USD">$ USD — US Dollar</option>
-      <option value="EUR">€ EUR — Euro</option>
-      <option value="INR">₹ INR — Indian Rupee</option>
-    </select>
-
-    <div style="background:var(--card2);border-radius:14px;padding:14px;margin-bottom:12px">
-      <label class="lbl" style="margin-bottom:10px">💷 Pay Rates (per hour)</label>
-      <div class="row" style="gap:10px">
-        <div style="flex:1"><label class="lbl">✅ Registered</label><input type="number" id="cfg-reg" step="0.01" min="0"></div>
-        <div style="flex:1"><label class="lbl">⚠️ Unregistered</label><input type="number" id="cfg-unreg" step="0.01" min="0"></div>
+    <!-- Appearance -->
+    <div class="settings-section">
+      <div style="padding:12px 16px 8px"><span style="font-size:11px;color:var(--mu);font-weight:700;letter-spacing:0.8px">APPEARANCE</span></div>
+      <div class="settings-row" onclick="toggleDark()">
+        <div class="settings-icon" style="background:var(--dim)"><span id="theme-icon">🌙</span></div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--tx)" id="theme-label">Dark Mode</div><div style="font-size:12px;color:var(--mu)">Switch appearance</div></div>
+        <button id="theme-toggle-btn" style="width:46px;height:26px;border-radius:99px;border:none;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.3s" onclick="event.stopPropagation();toggleDark()">
+          <div id="theme-toggle-ball" style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:3px;transition:left 0.3s;pointer-events:none"></div>
+        </button>
+      </div>
+      <div class="settings-row" style="cursor:default">
+        <div class="settings-icon" style="background:var(--dim)">🎨</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600;color:var(--tx);margin-bottom:10px">Accent Colour</div>
+          <div class="row" style="gap:10px;flex-wrap:wrap">
+            <div class="theme-dot active" id="dot-green"  onclick="setAccent('green')"  style="background:#6EE547"></div>
+            <div class="theme-dot" id="dot-indigo" onclick="setAccent('indigo')" style="background:#818CF8"></div>
+            <div class="theme-dot" id="dot-blue"   onclick="setAccent('blue')"   style="background:#38BDF8"></div>
+            <div class="theme-dot" id="dot-orange" onclick="setAccent('orange')" style="background:#FB923C"></div>
+            <div class="theme-dot" id="dot-pink"   onclick="setAccent('pink')"   style="background:#F472B6"></div>
+            <div class="theme-dot" id="dot-red"    onclick="setAccent('red')"    style="background:#F87171"></div>
+            <div class="theme-dot" id="dot-teal"   onclick="setAccent('teal')"   style="background:#2DD4BF"></div>
+            <div class="theme-dot" id="dot-yellow" onclick="setAccent('yellow')" style="background:#FCD34D"></div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="row" style="gap:10px;margin-bottom:18px">
-      <div style="flex:1"><label class="lbl">📊 Tax Rate (%)</label><input type="number" id="cfg-tax" min="0" max="60"></div>
-      <div style="flex:1"><label class="lbl">🎯 Monthly Goal</label><input type="number" id="cfg-goal" min="0"></div>
+
+    <!-- Pay & Finance -->
+    <div class="settings-section">
+      <div style="padding:12px 16px 8px"><span style="font-size:11px;color:var(--mu);font-weight:700;letter-spacing:0.8px">PAY & FINANCE</span></div>
+      <div style="padding:0 16px 14px">
+        <label class="lbl" style="margin-top:10px">Currency</label>
+        <select id="cfg-curr" style="margin-bottom:12px">
+          <option value="GBP">£ GBP — British Pound</option>
+          <option value="USD">$ USD — US Dollar</option>
+          <option value="EUR">€ EUR — Euro</option>
+          <option value="INR">₹ INR — Indian Rupee</option>
+          <option value="AUD">A$ AUD — Australian Dollar</option>
+          <option value="CAD">C$ CAD — Canadian Dollar</option>
+        </select>
+        <div class="row" style="gap:10px;margin-bottom:12px">
+          <div style="flex:1"><label class="lbl">✅ Registered Rate</label><input type="number" id="cfg-reg" step="0.01" min="0" placeholder="e.g. 12.21"></div>
+          <div style="flex:1"><label class="lbl">⚠️ Unregistered Rate</label><input type="number" id="cfg-unreg" step="0.01" min="0" placeholder="e.g. 7.00"></div>
+        </div>
+        <div class="row" style="gap:10px">
+          <div style="flex:1"><label class="lbl">Tax Rate (%)</label><input type="number" id="cfg-tax" min="0" max="60" placeholder="e.g. 20"></div>
+          <div style="flex:1"><label class="lbl">Monthly Goal</label><input type="number" id="cfg-goal" min="0" placeholder="e.g. 1400"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- Backup -->
-    <div style="background:var(--card2);border-radius:16px;padding:14px;margin-bottom:14px">
-      <div style="font-size:13px;font-weight:800;color:var(--tx);margin-bottom:4px">🔐 Local Backup</div>
-      <div style="font-size:12px;color:var(--mu);margin-bottom:12px">Extra safety — download a local copy.</div>
-      <button onclick="downloadBackup()" style="width:100%;padding:11px;border-radius:12px;background:var(--A);border:none;color:var(--At);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;margin-bottom:8px">💾 Download Backup</button>
-      <label class="backup-zone" style="display:block">
+    <!-- Language -->
+    <div class="settings-section">
+      <div style="padding:12px 16px 8px"><span style="font-size:11px;color:var(--mu);font-weight:700;letter-spacing:0.8px">LANGUAGE</span></div>
+      <div style="padding:0 16px 14px">
+        <select id="cfg-lang" style="margin-top:6px">
+          <option value="en">🇬🇧 English</option>
+          <option value="hi">🇮🇳 Hindi (हिंदी)</option>
+          <option value="gu">🇮🇳 Gujarati (ગુજરાતી)</option>
+          <option value="hinglish">🇮🇳 Hinglish</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Data & Backup -->
+    <div class="settings-section">
+      <div style="padding:12px 16px 8px"><span style="font-size:11px;color:var(--mu);font-weight:700;letter-spacing:0.8px">DATA & BACKUP</span></div>
+      <div class="settings-row" onclick="downloadBackup()">
+        <div class="settings-icon" style="background:var(--Ad)">💾</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--tx)">Download Backup</div><div style="font-size:12px;color:var(--mu)">Save local copy as JSON</div></div>
+        <span style="color:var(--mu);font-size:18px">›</span>
+      </div>
+      <div class="settings-row" onclick="document.getElementById('restore-file-inp').click()">
+        <div class="settings-icon" style="background:var(--indd)">📂</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--tx)">Restore from Backup</div><div style="font-size:12px;color:var(--mu)">Upload your .json file</div></div>
+        <span style="color:var(--mu);font-size:18px">›</span>
         <input type="file" id="restore-file-inp" accept=".json" onchange="handleRestore(this)" style="display:none">
-        <div style="font-size:18px;margin-bottom:4px">📂</div>
-        <div style="font-size:12px;font-weight:700;color:var(--tx)">Restore from Backup</div>
-        <div style="font-size:11px;color:var(--mu);margin-top:2px">Select .json file</div>
-      </label>
+      </div>
+      <div class="settings-row" onclick="forceSyncNow()">
+        <div class="settings-icon" style="background:var(--grnd)">☁️</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--tx)">Force Sync Now</div><div style="font-size:12px;color:var(--mu)" id="last-sync-text">Sync to Google Drive</div></div>
+        <span style="color:var(--mu);font-size:18px">›</span>
+      </div>
+      <div class="settings-row" onclick="openResetConfirm()">
+        <div class="settings-icon" style="background:var(--redd)">🗑️</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--red)">Reset All Data</div><div style="font-size:12px;color:var(--mu)">Permanently delete everything</div></div>
+        <span style="color:var(--mu);font-size:18px">›</span>
+      </div>
     </div>
 
-    <button onclick="saveSettings()" style="width:100%;padding:14px;border-radius:14px;background:var(--A);border:none;color:var(--At);font-weight:800;font-size:15px;cursor:pointer;font-family:inherit;margin-bottom:10px">✅ Save Settings</button>
-    <button onclick="openResetConfirm()" style="width:100%;padding:12px;border-radius:14px;background:var(--redd);border:1px solid rgba(248,113,113,0.3);color:var(--red);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">🗑️ Reset All Data</button>
+    <button onclick="saveSettings()" style="width:100%;padding:14px;border-radius:14px;background:var(--A);border:none;color:var(--At);font-weight:800;font-size:15px;cursor:pointer;font-family:inherit;margin-top:4px">✅ Save Settings</button>
+    <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--mu)">TiMMing 2.0 · Made with ❤️</div>
   </div>
 </div>
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────────────
-var cfg = {currency:'GBP',regRate:12.21,unregRate:7,tax:20,name:'',goal:1400};
-var isDark = true, accentKey = 'green';
-var CURR = {GBP:{symbol:'£',locale:'en-GB'},USD:{symbol:'$',locale:'en-US'},EUR:{symbol:'€',locale:'de-DE'},INR:{symbol:'₹',locale:'en-IN'}};
-var entries = [];
-var currentTab = 'timer', selM = new Date().toISOString().slice(0,7), editingId = null;
-var asReg = true, edReg = true, poReg = true;
+// ─── CONFIG ────────────────────────────────────────────────────
+var cfg={currency:'GBP',regRate:12.21,unregRate:7,tax:20,name:'',goal:1400,lang:'en'};
+var isDark=true,accentKey='green';
+var CURR={GBP:{symbol:'£',locale:'en-GB'},USD:{symbol:'$',locale:'en-US'},EUR:{symbol:'€',locale:'de-DE'},INR:{symbol:'₹',locale:'en-IN'},AUD:{symbol:'A$',locale:'en-AU'},CAD:{symbol:'C$',locale:'en-CA'}};
+var entries=[];
+var currentTab='timer',selM=new Date().toISOString().slice(0,7),editingId=null;
+var asReg=true,edReg=true,poReg=true;
 var timerTs=null,timerPrev=0,elapsed=0,inBreak=false,breakStart=null,breakElapsed=0,breakTarget=null;
 var stopRegVal=true,shiftStartedAt='',shiftNote='';
 var timerInterval=null,breakInterval=null;
 
-// ─── GOOGLE CONFIG ────────────────────────────────────────────
-var GCI = '705281275188-ihnkdbru8a6r0qc1k9jml391cl3eucab.apps.googleusercontent.com';
-var GSCOPE = 'https://www.googleapis.com/auth/drive.appdata';
-var gToken = null, gUser = null, gFileId = null, syncTimer = null;
-var FNAME = 'TiMMing_Data.json';
+// ─── LANG STRINGS ──────────────────────────────────────────────
+var LANG={
+  en:{morning:'Good morning',afternoon:'Good afternoon',evening:'Good evening',night:'Good night',punchIn:'Punch In',addEntry:'Add Entry Manually',recording:'● Recording shift',punchOut:'Punch Out',startBreak:'Start Break',endBreak:'End Break & Resume',registered:'Registered',unregistered:'Unregistered',shifts:'Shifts',hours:'Hours',gross:'Gross',today:'Today',thisMonth:'This Month'},
+  hi:{morning:'सुप्रभात',afternoon:'नमस्ते',evening:'शुभ संध्या',night:'शुभ रात्रि',punchIn:'शुरू करें',addEntry:'मैन्युअल एंट्री',recording:'● शिफ्ट चल रही है',punchOut:'शिफ्ट खत्म करें',startBreak:'ब्रेक लें',endBreak:'ब्रेक खत्म करें',registered:'रजिस्टर्ड',unregistered:'अनरजिस्टर्ड',shifts:'शिफ्ट',hours:'घंटे',gross:'कुल',today:'आज',thisMonth:'इस महीने'},
+  gu:{morning:'સુપ્રભાત',afternoon:'નમસ્તે',evening:'શુભ સાંજ',night:'શુભ રાત્રિ',punchIn:'શરૂ કરો',addEntry:'એન્ટ્રી ઉમેરો',recording:'● શિફ્ટ ચાલુ',punchOut:'શિફ્ટ પૂરી કરો',startBreak:'બ્રેક લો',endBreak:'બ્રેક પૂરો',registered:'રજિસ્ટર્ડ',unregistered:'અનરજિસ્ટર્ડ',shifts:'શિફ્ટ',hours:'કલાક',gross:'કુલ',today:'આજ',thisMonth:'આ મહિને'},
+  hinglish:{morning:'Good morning',afternoon:'Hello',evening:'Good evening',night:'Good night',punchIn:'Punch In karo',addEntry:'Entry add karo',recording:'● Shift chal rahi hai',punchOut:'Punch Out karo',startBreak:'Break lo',endBreak:'Wapas shuru karo',registered:'Registered',unregistered:'Unregistered',shifts:'Shifts',hours:'Hours',gross:'Total',today:'Aaj',thisMonth:'Is mahine'}
+};
+function t(key){return(LANG[cfg.lang]||LANG.en)[key]||key;}
 
-// ─── HELPERS ──────────────────────────────────────────────────
-function $c(n,c){c=c||cfg.currency;try{return new Intl.NumberFormat(CURR[c].locale,{style:'currency',currency:c,minimumFractionDigits:2}).format(n||0);}catch(e){return(CURR[c]?CURR[c].symbol:'£')+(n||0).toFixed(2);}}
+// ─── GOOGLE CONFIG ─────────────────────────────────────────────
+var GCI='705281275188-ihnkdbru8a6r0qc1k9jml391cl3eucab.apps.googleusercontent.com';
+var GSCOPE='https://www.googleapis.com/auth/drive.appdata';
+var gToken=null,gUser=null,gFileId=null,syncTimer=null,lastSyncTime=null;
+var FNAME='TiMMing_Data.json';
+
+// ─── HELPERS ───────────────────────────────────────────────────
+function $c(n,c){c=c||cfg.currency;try{return new Intl.NumberFormat(CURR[c]?CURR[c].locale:'en-GB',{style:'currency',currency:c,minimumFractionDigits:2}).format(n||0);}catch(e){return(CURR[c]?CURR[c].symbol:'£')+(n||0).toFixed(2);}}
 function $h(h){var hh=Math.floor(h),mm=Math.round((h-hh)*60);return mm?hh+'h '+mm+'m':hh+'h';}
 function $b(h){var m=Math.round(h*60);if(!m)return'0m';var hh=Math.floor(m/60),mm=m%60;return hh?(mm?hh+'h '+mm+'m':hh+'h'):mm+'m';}
 function $d(s){return String(Math.floor(s/3600)).padStart(2,'0')+':'+String(Math.floor((s%3600)/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
@@ -373,290 +472,222 @@ function $m(ym){var p=ym.split('-');return new Date(+p[0],+p[1]-1,1).toLocaleDat
 function $ms(ym){var p=ym.split('-');return new Date(+p[0],+p[1]-1,1).toLocaleDateString('en-GB',{month:'short',year:'2-digit'});}
 function tod(){return new Date().toISOString().split('T')[0];}
 function fmtT(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+function getGreeting(){
+  var h=new Date().getHours();
+  if(h>=5&&h<12)return t('morning');
+  if(h>=12&&h<17)return t('afternoon');
+  if(h>=17&&h<21)return t('evening');
+  return t('night');
+}
+function getGreetingEmoji(){
+  var h=new Date().getHours();
+  if(h>=5&&h<12)return'☀️';
+  if(h>=12&&h<17)return'🌤️';
+  if(h>=17&&h<21)return'🌆';
+  return'🌙';
+}
 
-// ─── TOAST ────────────────────────────────────────────────────
+// ─── TOAST ─────────────────────────────────────────────────────
 var toastTmr=null;
 function toast(msg,type){
   var el=document.getElementById('toast');
-  el.textContent=msg;
-  el.style.background=type==='err'?'rgba(248,113,113,0.97)':'rgba(110,229,71,0.97)';
-  el.style.color=type==='err'?'#fff':'#0a1200';
-  el.className='toast';
-  clearTimeout(toastTmr);
-  toastTmr=setTimeout(function(){el.className='toast hidden';},3000);
+  el.textContent=msg;el.style.background=type==='err'?'rgba(248,113,113,0.97)':'rgba(110,229,71,0.97)';
+  el.style.color=type==='err'?'#fff':'#0a1200';el.className='toast';
+  clearTimeout(toastTmr);toastTmr=setTimeout(function(){el.className='toast hidden';},3000);
 }
 
-// ─── THEME ────────────────────────────────────────────────────
+// ─── THEME ─────────────────────────────────────────────────────
 function toggleDark(){isDark=!isDark;document.documentElement.setAttribute('data-dark',isDark?'1':'0');updateThemeUI();}
 function setAccent(k){
-  accentKey=k;
-  document.documentElement.setAttribute('data-accent',k);
-  ['green','indigo','blue','orange','pink'].forEach(function(x){
+  accentKey=k;document.documentElement.setAttribute('data-accent',k);
+  ['green','indigo','blue','orange','pink','red','teal','yellow'].forEach(function(x){
     var d=document.getElementById('dot-'+x);if(d)d.classList.toggle('active',x===k);
   });
 }
 function updateThemeUI(){
-  var btn=document.getElementById('theme-toggle-btn');
-  var ball=document.getElementById('theme-toggle-ball');
-  var icon=document.getElementById('theme-icon');
-  var lbl=document.getElementById('theme-label');
+  var btn=document.getElementById('theme-toggle-btn'),ball=document.getElementById('theme-toggle-ball');
+  var icon=document.getElementById('theme-icon'),lbl=document.getElementById('theme-label');
   if(!btn)return;
-  btn.style.background=isDark?'#334155':'var(--A)';
-  ball.style.left=isDark?'3px':'25px';
-  if(icon)icon.textContent=isDark?'🌙':'☀️';
-  if(lbl)lbl.textContent=isDark?'Dark Mode':'Light Mode';
+  btn.style.background=isDark?'#334155':'var(--A)';ball.style.left=isDark?'3px':'23px';
+  if(icon)icon.textContent=isDark?'🌙':'☀️';if(lbl)lbl.textContent=isDark?'Dark Mode':'Light Mode';
 }
 
-// ─── SYNC STATUS ──────────────────────────────────────────────
-function setSyncStatus(state, text){
-  var pill=document.getElementById('sync-pill');
-  var icon=document.getElementById('sync-icon');
-  var txt=document.getElementById('sync-txt');
+// ─── SYNC STATUS ───────────────────────────────────────────────
+function setSyncStatus(state,text){
+  var pill=document.getElementById('sync-pill'),icon=document.getElementById('sync-icon'),txt=document.getElementById('sync-txt');
   if(!pill)return;
   pill.className='sync-pill sp-'+state;
   var icons={ok:'✓',ing:'↻',err:'!',off:'○'};
-  if(icon)icon.textContent=icons[state]||'○';
-  if(txt)txt.textContent=text;
-  var info=document.getElementById('cfg-sync-info');
-  if(info)info.textContent=text;
+  if(icon)icon.textContent=icons[state]||'○';if(txt)txt.textContent=text;
+  var detail=document.getElementById('sync-status-detail');
+  if(detail)detail.textContent=text;
+  var ls=document.getElementById('last-sync-text');
+  if(ls&&state==='ok')ls.textContent='Last synced: '+text.replace('Saved ','').replace('Synced ','');
 }
 
-// ─── LOGIN FLOW ───────────────────────────────────────────────
-function startGoogleLogin(){
-  var btn=document.getElementById('signin-btn');
-  var loading=document.getElementById('login-loading');
-  var errEl=document.getElementById('login-error');
-  btn.style.display='none';
-  loading.classList.remove('hidden');
-  errEl.classList.add('hidden');
-
-  // Single token client requesting BOTH profile + Drive in one popup
-  // This is the correct approach — avoids double popup which browsers block
-  try{
-    var client = google.accounts.oauth2.initTokenClient({
-      client_id: GCI,
-      scope: 'openid profile email ' + GSCOPE,
-      callback: function(resp){
-        if(resp && resp.access_token){
-          gToken = resp.access_token;
-          // Get user profile using the token
-          fetchGoogleProfile(gToken);
-        } else {
-          showLoginError('Sign in was cancelled. Please try again.');
-          resetLoginBtn();
-        }
-      },
-      error_callback: function(e){
-        showLoginError('Sign in failed. Please try again.');
-        resetLoginBtn();
-      }
-    });
-    // requestAccessToken MUST be called directly from user click (no setTimeout/delay)
-    client.requestAccessToken({prompt: 'select_account'});
-  } catch(e){
-    showLoginError('Google Sign-In not ready yet. Wait 2 seconds and try again.');
-    resetLoginBtn();
+// ─── UPDATE HEADER ─────────────────────────────────────────────
+function updateHeader(){
+  var g=document.getElementById('hdr-greeting');
+  var n=document.getElementById('hdr-name-big');
+  if(g)g.textContent=getGreeting()+' '+getGreetingEmoji();
+  if(n)n.textContent=cfg.name||(gUser?gUser.given_name:'');
+  var ls=document.getElementById('live-status');
+  if(ls){
+    var isR=timerTs!==null||inBreak;
+    if(isR){ls.classList.remove('hidden');ls.textContent=inBreak?'☕ BREAK · '+$d(breakElapsed):'● LIVE · '+$d(elapsed);}
+    else ls.classList.add('hidden');
+  }
+  // Avatar
+  if(gUser&&gUser.picture){
+    var av=document.getElementById('hdr-avatar');
+    var lt=document.getElementById('hdr-avatar-letter');
+    if(av){av.src=gUser.picture;av.style.display='block';}
+    if(lt)lt.style.display='none';
+  } else if(cfg.name){
+    var lt2=document.getElementById('hdr-avatar-letter');
+    if(lt2)lt2.textContent=cfg.name.charAt(0).toUpperCase();
   }
 }
 
-function fetchGoogleProfile(token){
-  fetch('https://www.googleapis.com/oauth2/v3/userinfo',{
-    headers:{'Authorization':'Bearer '+token}
-  })
-  .then(function(r){return r.json();})
-  .then(function(data){
-    gUser = data;
-    onSignedIn();
-  })
-  .catch(function(){
-    gUser = {name:'User',given_name:'User',email:''};
-    onSignedIn();
-  });
+// ─── LOGIN FLOW ────────────────────────────────────────────────
+function startGoogleLogin(){
+  var btn=document.getElementById('signin-btn'),loading=document.getElementById('login-loading'),errEl=document.getElementById('login-error');
+  btn.style.display='none';loading.classList.remove('hidden');errEl.classList.add('hidden');
+  try{
+    var client=google.accounts.oauth2.initTokenClient({
+      client_id:GCI,scope:'openid profile email '+GSCOPE,
+      callback:function(resp){
+        if(resp&&resp.access_token){
+          gToken=resp.access_token;fetchGoogleProfile(gToken);
+        }else{showLoginError('Sign in cancelled. Please try again.');resetLoginBtn();}
+      },
+      error_callback:function(){showLoginError('Sign in failed. Please try again.');resetLoginBtn();}
+    });
+    client.requestAccessToken({prompt:'select_account'});
+  }catch(e){
+    showLoginError('Google Sign-In not ready. Wait 2 seconds and try again.');resetLoginBtn();
+  }
 }
-
+function fetchGoogleProfile(token){
+  fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{'Authorization':'Bearer '+token}})
+  .then(function(r){return r.json();})
+  .then(function(data){gUser=data;onSignedIn();})
+  .catch(function(){gUser={name:'User',given_name:'User',email:''};onSignedIn();});
+}
 function onSignedIn(){
-  // Set name from Google
-  cfg.name=(gUser.given_name||gUser.name||'User');
+  cfg.name=gUser.given_name||gUser.name||'User';
   setSyncStatus('ing','Loading...');
-  // Load from Drive, then show app
   loadFromDrive(function(){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.visibility='visible';
-    updateSettingsUI();
-    startAutoSync();
+    updateHeader();updateSettingsUI();startAutoSync();
     buildTimerIdle();
-    updateHeader();
     toast('👋 Welcome, '+cfg.name+'!');
   });
 }
-
-function showLoginError(msg){
-  var errEl=document.getElementById('login-error');
-  errEl.textContent=msg;
-  errEl.classList.remove('hidden');
-}
-function resetLoginBtn(){
-  document.getElementById('signin-btn').style.display='flex';
-  document.getElementById('login-loading').classList.add('hidden');
-}
-
+function showLoginError(msg){var e=document.getElementById('login-error');e.textContent=msg;e.classList.remove('hidden');}
+function resetLoginBtn(){document.getElementById('signin-btn').style.display='flex';document.getElementById('login-loading').classList.add('hidden');}
 function signOut(){
   try{google.accounts.id.disableAutoSelect();}catch(e){}
-  gToken=null;gUser=null;gFileId=null;
-  clearInterval(syncTimer);syncTimer=null;
-  entries=[];
-  cfg={currency:'GBP',regRate:12.21,unregRate:7,tax:20,name:'',goal:1400};
+  gToken=null;gUser=null;gFileId=null;clearInterval(syncTimer);
+  entries=[];cfg={currency:'GBP',regRate:12.21,unregRate:7,tax:20,name:'',goal:1400,lang:'en'};
+  clearInterval(timerInterval);clearInterval(breakInterval);
+  timerTs=null;timerPrev=0;elapsed=0;inBreak=false;
   document.getElementById('modal-settings').classList.add('hidden');
   document.getElementById('app').style.visibility='hidden';
   document.getElementById('login-screen').style.display='flex';
-  resetLoginBtn();
-  document.getElementById('login-error').classList.add('hidden');
+  resetLoginBtn();document.getElementById('login-error').classList.add('hidden');
   setSyncStatus('off','Offline');
-  clearInterval(timerInterval);clearInterval(breakInterval);
-  timerTs=null;timerPrev=0;elapsed=0;inBreak=false;
 }
-
 function updateSettingsUI(){
   if(!gUser)return;
-  var av=document.getElementById('cfg-avatar');
-  var nm=document.getElementById('cfg-name-display');
-  var em=document.getElementById('cfg-email-display');
-  if(av&&gUser.picture)av.src=gUser.picture;
-  if(nm)nm.textContent=gUser.name||cfg.name;
-  if(em)em.textContent=gUser.email||'';
+  var av=document.getElementById('cfg-avatar'),nm=document.getElementById('cfg-name-display'),em=document.getElementById('cfg-email-display');
+  if(av)av.src=gUser.picture||'';if(nm)nm.textContent=gUser.name||cfg.name;if(em)em.textContent=gUser.email||'';
 }
 
-// ─── DRIVE API ────────────────────────────────────────────────
-function driveReq(method,path,body,cb){
-  var opts={method:method,headers:{'Authorization':'Bearer '+gToken}};
-  if(body){opts.headers['Content-Type']='application/json';opts.body=JSON.stringify(body);}
-  fetch('https://www.googleapis.com/'+path,opts)
-  .then(function(r){return r.json();})
-  .then(function(d){cb(null,d);})
-  .catch(function(e){cb(e,null);});
-}
-
+// ─── DRIVE API ─────────────────────────────────────────────────
 function findFile(cb){
-  if(gFileId){cb(null,gFileId);return;}
-  fetch("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name%3D'"+FNAME+"'&fields=files(id)",{
+  var q=encodeURIComponent("name='"+FNAME+"'");
+  fetch("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q="+q+"&fields=files(id,name)&pageSize=10",{
     headers:{'Authorization':'Bearer '+gToken}
   })
   .then(function(r){return r.json();})
   .then(function(d){
     if(d.files&&d.files.length>0){gFileId=d.files[0].id;cb(null,gFileId);}
-    else cb(null,null);
+    else{gFileId=null;cb(null,null);}
   })
-  .catch(function(e){cb(e,null);});
+  .catch(function(e){gFileId=null;cb(e,null);});
 }
-
 function loadFromDrive(done){
   if(!gToken){if(done)done();return;}
+  setSyncStatus('ing','Loading...');
   findFile(function(err,fid){
-    if(err||!fid){
-      // No file — fresh start, save empty data
-      saveToDrive(done);
-      return;
-    }
+    if(err||!fid){saveToDrive(done);return;}
     fetch('https://www.googleapis.com/drive/v3/files/'+fid+'?alt=media',{
       headers:{'Authorization':'Bearer '+gToken}
     })
-    .then(function(r){return r.json();})
-    .then(function(data){
-      if(data.entries&&Array.isArray(data.entries))entries=data.entries;
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
+    .then(function(text){
+      var data;try{data=JSON.parse(text);}catch(e){throw new Error('Bad JSON');}
+      if(data.entries&&Array.isArray(data.entries)&&data.entries.length>0)entries=data.entries;
       if(data.cfg)cfg=Object.assign(cfg,data.cfg);
-      // Always override name from Google
-      cfg.name=gUser?(gUser.given_name||gUser.name||cfg.name):cfg.name;
+      if(gUser)cfg.name=gUser.given_name||gUser.name||cfg.name;
       if(data.theme){
-        if(typeof data.theme.isDark!=='undefined'){
-          isDark=data.theme.isDark;
-          document.documentElement.setAttribute('data-dark',isDark?'1':'0');
-          updateThemeUI();
-        }
+        if(typeof data.theme.isDark!=='undefined'){isDark=data.theme.isDark;document.documentElement.setAttribute('data-dark',isDark?'1':'0');updateThemeUI();}
         if(data.theme.accentKey)setAccent(data.theme.accentKey);
       }
-      var latest=getMonths()[0];
-      if(latest)selM=latest;
-      var t=data.saved?new Date(data.saved).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'';
-      setSyncStatus('ok','Synced '+t);
+      var latest=getMonths()[0];selM=latest||new Date().toISOString().slice(0,7);
+      var t2=data.saved?new Date(data.saved).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'';
+      setSyncStatus('ok','Synced '+t2);lastSyncTime=new Date();
       if(done)done();
     })
     .catch(function(){
-      setSyncStatus('err','Load failed');
-      if(done)done();
+      setSyncStatus('err','Retrying...');
+      setTimeout(function(){gFileId=null;loadFromDrive(done);},2000);
     });
   });
 }
-
 function saveToDrive(done){
   if(!gToken)return;
   setSyncStatus('ing','Saving...');
-  var body=JSON.stringify({
-    version:2,saved:new Date().toISOString(),
-    cfg:cfg,entries:entries,
-    theme:{isDark:isDark,accentKey:accentKey}
-  });
+  var body=JSON.stringify({version:2,saved:new Date().toISOString(),cfg:cfg,entries:entries,theme:{isDark:isDark,accentKey:accentKey}});
   findFile(function(err,fid){
-    if(fid){
-      // Update existing
-      fetch('https://www.googleapis.com/upload/drive/v3/files/'+fid+'?uploadType=media',{
-        method:'PATCH',
-        headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
-        body:body
-      })
-      .then(function(){
-        var t=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-        setSyncStatus('ok','Saved '+t);
-        if(done)done();
-      })
-      .catch(function(){setSyncStatus('err','Save failed');if(done)done();});
-    } else {
-      // Create new
-      fetch('https://www.googleapis.com/drive/v3/files',{
-        method:'POST',
-        headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
-        body:JSON.stringify({name:FNAME,parents:['appDataFolder']})
-      })
+    var url,method;
+    if(fid){url='https://www.googleapis.com/upload/drive/v3/files/'+fid+'?uploadType=media';method='PATCH';}
+    else{
+      fetch('https://www.googleapis.com/drive/v3/files',{method:'POST',headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},body:JSON.stringify({name:FNAME,parents:['appDataFolder']})})
       .then(function(r){return r.json();})
       .then(function(meta){
         gFileId=meta.id;
-        return fetch('https://www.googleapis.com/upload/drive/v3/files/'+gFileId+'?uploadType=media',{
-          method:'PATCH',
-          headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},
-          body:body
-        });
+        return fetch('https://www.googleapis.com/upload/drive/v3/files/'+gFileId+'?uploadType=media',{method:'PATCH',headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},body:body});
       })
-      .then(function(){
-        var t=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-        setSyncStatus('ok','Saved '+t);
-        if(done)done();
-      })
+      .then(function(){var t2=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});setSyncStatus('ok','Saved '+t2);lastSyncTime=new Date();if(done)done();})
       .catch(function(){setSyncStatus('err','Save failed');if(done)done();});
+      return;
     }
+    fetch(url,{method:method,headers:{'Authorization':'Bearer '+gToken,'Content-Type':'application/json'},body:body})
+    .then(function(){var t2=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});setSyncStatus('ok','Saved '+t2);lastSyncTime=new Date();if(done)done();})
+    .catch(function(){setSyncStatus('err','Save failed');if(done)done();});
   });
 }
-
 function triggerSave(){if(gToken)setTimeout(function(){saveToDrive();},500);}
-function startAutoSync(){
-  clearInterval(syncTimer);
-  syncTimer=setInterval(function(){if(gToken)saveToDrive();},30000);
-}
+function forceSyncNow(){document.getElementById('modal-settings').classList.add('hidden');saveToDrive(function(){toast('☁️ Synced!');});}
+function startAutoSync(){clearInterval(syncTimer);syncTimer=setInterval(function(){if(gToken)saveToDrive();},30000);}
 
-// ─── DATA HELPERS ─────────────────────────────────────────────
+// ─── DATA HELPERS ───────────────────────────────────────────────
 function earnDyn(es){var r=0,u=0;es.forEach(function(e){if(e.reg)r+=e.hours;else u+=e.hours;});return{rH:r,uH:u,rE:r*cfg.regRate,uE:u*cfg.unregRate,tot:r*cfg.regRate+u*cfg.unregRate};}
 function getMonths(){var s={};entries.forEach(function(e){s[e.date.slice(0,7)]=1;});return Object.keys(s).sort().reverse();}
 function getMonthEntries(ym){return entries.filter(function(e){return e.date.startsWith(ym);});}
 function navMonth(dir){var months=getMonths(),idx=months.indexOf(selM),n=idx-dir;if(n>=0&&n<months.length){selM=months[n];renderCurrent();}}
 function monthDataArr(){return getMonths().slice(0,14).reverse().map(function(ym){var es=getMonthEntries(ym),e=earnDyn(es);return{ym:ym,label:$ms(ym),hours:+(es.reduce(function(s,e){return s+e.hours;},0)).toFixed(1),earn:+e.tot.toFixed(2),shifts:es.length};});}
 
-// ─── TIMER ────────────────────────────────────────────────────
+// ─── TIMER ─────────────────────────────────────────────────────
 function punchIn(){
-  timerTs=Date.now();timerPrev=0;elapsed=0;
-  inBreak=false;breakStart=null;breakElapsed=0;breakTarget=null;
+  timerTs=Date.now();timerPrev=0;elapsed=0;inBreak=false;breakStart=null;breakElapsed=0;breakTarget=null;
   shiftStartedAt=fmtT();shiftNote='';
   clearInterval(timerInterval);clearInterval(breakInterval);
   timerInterval=setInterval(tickTimer,1000);
-  buildTimerRunning();updateTimerValues();updateHeader();
-  toast('▶ Shift started');
+  buildTimerRunning();updateTimerValues();updateHeader();toast('▶ Shift started');
 }
 function tickTimer(){elapsed=timerPrev+Math.floor((Date.now()-timerTs)/1000);updateTimerValues();updateHeader();}
 function tickBreak(){breakElapsed=Math.floor((Date.now()-breakStart)/1000);updateBreakValues();updateHeader();}
@@ -670,25 +701,17 @@ function updateBreakValues(){
   var e=document.getElementById('b-elapsed');if(e)e.textContent=$d(breakElapsed);
   var e2=document.getElementById('b-shiftSoFar');if(e2)e2.textContent=$d(elapsed);
   var e3=document.getElementById('b-brkTot');if(e3)e3.textContent=$d(breakElapsed);
-  if(breakTarget){
-    var pct=Math.min(100,(breakElapsed/breakTarget)*100);
-    var bar=document.getElementById('b-bar');if(bar)bar.style.width=pct+'%';
-    var rem=Math.max(0,breakTarget-breakElapsed);
-    var remEl=document.getElementById('b-rem');if(remEl)remEl.textContent=$d(rem)+' remaining';
-  }
+  if(breakTarget){var pct=Math.min(100,(breakElapsed/breakTarget)*100);var bar=document.getElementById('b-bar');if(bar)bar.style.width=pct+'%';var rem=Math.max(0,breakTarget-breakElapsed);var remEl=document.getElementById('b-rem');if(remEl)remEl.textContent=$d(rem)+' remaining';}
 }
 function startBreak(mins){
   if((!timerTs&&!inBreak)||inBreak)return;
   var cur=timerPrev+Math.floor((Date.now()-timerTs)/1000);timerPrev=cur;timerTs=null;
-  clearInterval(timerInterval);
-  inBreak=true;breakStart=Date.now();breakElapsed=0;breakTarget=mins?mins*60:null;
-  breakInterval=setInterval(tickBreak,1000);
-  buildTimerBreak();updateBreakValues();updateHeader();
+  clearInterval(timerInterval);inBreak=true;breakStart=Date.now();breakElapsed=0;breakTarget=mins?mins*60:null;
+  breakInterval=setInterval(tickBreak,1000);buildTimerBreak();updateBreakValues();updateHeader();
   toast(mins?'☕ '+mins+'m break':'☕ Break started');
 }
 function endBreak(){
-  if(!inBreak)return;
-  clearInterval(breakInterval);inBreak=false;breakStart=null;timerTs=Date.now();
+  if(!inBreak)return;clearInterval(breakInterval);inBreak=false;breakStart=null;timerTs=Date.now();
   clearInterval(timerInterval);timerInterval=setInterval(tickTimer,1000);
   buildTimerRunning();updateTimerValues();updateHeader();toast('▶ Shift resumed');
 }
@@ -697,49 +720,40 @@ function openPunchOut(){
   poReg=stopRegVal;updatePOToggle();document.getElementById('po-note').value='';updatePOEstimate();
   document.getElementById('modal-punchout').classList.remove('hidden');
 }
-function updatePOEstimate(){var earn=(elapsed/3600)*(poReg?cfg.regRate:cfg.unregRate);document.getElementById('po-estimate').innerHTML='Estimated: <strong style="color:var(--A)">'+$c(earn)+'</strong>';}
+function updatePOEstimate(){document.getElementById('po-estimate').innerHTML='Estimated: <strong style="color:var(--A)">'+$c((elapsed/3600)*(poReg?cfg.regRate:cfg.unregRate))+'</strong>';}
 function setPOReg(v){poReg=v;updatePOToggle();updatePOEstimate();}
 function updatePOToggle(){document.getElementById('po-reg-btn').className='reg-btn '+(poReg?'ar':'');document.getElementById('po-unreg-btn').className='reg-btn '+(!poReg?'au':'');}
 function confirmPunchOut(){
-  var note=document.getElementById('po-note').value;
   var hrs=+(elapsed/3600).toFixed(3);
   var start=new Date(Date.now()-(elapsed+breakElapsed)*1000).toTimeString().slice(0,5);
-  entries.push({id:'t'+Date.now(),date:tod(),hours:hrs,notes:note||shiftNote||'Timer session',start:start,end:new Date().toTimeString().slice(0,5),breakH:breakElapsed/3600,reg:poReg});
+  entries.push({id:'t'+Date.now(),date:tod(),hours:hrs,notes:document.getElementById('po-note').value||shiftNote||'Timer session',start:start,end:new Date().toTimeString().slice(0,5),breakH:breakElapsed/3600,reg:poReg});
   clearInterval(timerInterval);clearInterval(breakInterval);
   timerTs=null;timerPrev=0;elapsed=0;inBreak=false;breakStart=null;breakElapsed=0;breakTarget=null;shiftStartedAt='';shiftNote='';
   document.getElementById('modal-punchout').classList.add('hidden');
-  toast('✅ '+$h(hrs)+' saved');
-  buildTimerIdle();updateHeader();triggerSave();
-}
-function updateHeader(){
-  var ls=document.getElementById('live-status');var isR=timerTs!==null||inBreak;
-  if(isR){ls.classList.remove('hidden');ls.textContent=inBreak?'☕ BREAK · '+$d(breakElapsed):'● LIVE · '+$d(elapsed);}
-  else ls.classList.add('hidden');
+  toast('✅ '+$h(hrs)+' saved');buildTimerIdle();updateHeader();triggerSave();
 }
 
-// ─── BUILD TIMER SCREENS ──────────────────────────────────────
+// ─── BUILD TIMER SCREENS ────────────────────────────────────────
 function setContent(h){document.getElementById('content').innerHTML=h;}
 function buildTimerIdle(){
   var mE=getMonthEntries(selM),mEarn=earnDyn(mE);
   var h='<div class="anim" style="display:flex;flex-direction:column;gap:16px">';
-  h+='<div><div style="font-size:23px;font-weight:900;color:var(--tx);letter-spacing:-0.5px">Time Card</div>';
-  h+='<div style="font-size:13px;color:var(--mu);margin-top:3px">'+new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+'</div></div>';
   h+='<div class="row" style="gap:10px">';
-  h+='<div class="card" style="flex:1;padding:16px 14px"><div style="font-size:20px;margin-bottom:7px">🕰️</div><div style="font-size:16px;font-weight:800;color:var(--tx)">0h</div><div style="font-size:11px;color:var(--mu);margin-top:3px">Today</div></div>';
-  h+='<div class="card" style="flex:1;padding:16px 14px"><div style="font-size:20px;margin-bottom:7px">💰</div><div style="font-size:16px;font-weight:800;color:var(--tx)">'+$c(mEarn.tot)+'</div><div style="font-size:11px;color:var(--mu);margin-top:3px">This Month</div></div>';
+  h+='<div class="card" style="flex:1;padding:16px 14px"><div style="font-size:20px;margin-bottom:7px">🕰️</div><div style="font-size:16px;font-weight:800;color:var(--tx)">0h</div><div style="font-size:11px;color:var(--mu);margin-top:3px">'+t('today')+'</div></div>';
+  h+='<div class="card" style="flex:1;padding:16px 14px"><div style="font-size:20px;margin-bottom:7px">💰</div><div style="font-size:16px;font-weight:800;color:var(--tx)">'+$c(mEarn.tot)+'</div><div style="font-size:11px;color:var(--mu);margin-top:3px">'+t('thisMonth')+'</div></div>';
   h+='</div>';
   h+='<button onclick="punchIn()" style="background:var(--A);border:none;border-radius:22px;height:136px;width:100%;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,0.25)">';
-  h+='<div style="width:54px;height:54px;border-radius:50%;background:rgba(0,0,0,0.18);display:flex;align-items:center;justify-content:center;font-size:28px">▶️</div>';
-  h+='<span style="font-size:24px;font-weight:900;color:var(--At);letter-spacing:-0.5px">Punch In</span></button>';
+  h+='<div style="width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,0.18);display:flex;align-items:center;justify-content:center;font-size:28px">▶️</div>';
+  h+='<span style="font-size:24px;font-weight:900;color:var(--At);letter-spacing:-0.5px">'+t('punchIn')+'</span></button>';
   h+='<div style="text-align:center;color:var(--mu);font-size:11px;font-weight:700;letter-spacing:3px">— OR —</div>';
   h+='<button onclick="openAddShift()" style="background:var(--indd);border:1px solid rgba(129,140,248,0.25);border-radius:18px;height:96px;width:100%;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">';
-  h+='<div style="font-size:26px">📝</div><span style="font-size:18px;font-weight:800;color:var(--ind)">Add Entry Manually</span></button>';
+  h+='<div style="font-size:26px">📝</div><span style="font-size:18px;font-weight:800;color:var(--ind)">'+t('addEntry')+'</span></button>';
   h+='</div>';setContent(h);
 }
 function buildTimerRunning(){
   var h='<div style="display:flex;flex-direction:column;gap:12px">';
   h+='<div style="background:linear-gradient(135deg,rgba(110,229,71,0.12),rgba(110,229,71,0.04));border:1px solid rgba(110,229,71,0.2);border-radius:24px;padding:22px 20px">';
-  h+='<div style="font-size:11px;color:var(--A);font-weight:700;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase">● Recording shift</div>';
+  h+='<div style="font-size:11px;color:var(--A);font-weight:700;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase">'+t('recording')+'</div>';
   h+='<div id="t-elapsed" style="font-size:50px;font-weight:900;color:var(--A);font-variant-numeric:tabular-nums;letter-spacing:-3px;line-height:1">00:00:00</div>';
   h+='<div class="row" style="justify-content:space-around;margin-top:16px;padding-top:14px;border-top:1px solid rgba(110,229,71,0.12)">';
   h+='<div style="text-align:center"><div style="font-size:10px;color:var(--mu);margin-bottom:3px;font-weight:700;letter-spacing:0.5px">ELAPSED</div><div id="t-elapsed2" style="font-size:13px;font-weight:800;color:var(--tx)">00:00:00</div></div>';
@@ -747,13 +761,13 @@ function buildTimerRunning(){
   h+='<div style="text-align:center"><div style="font-size:10px;color:var(--mu);margin-bottom:3px;font-weight:700;letter-spacing:0.5px">BREAK</div><div id="t-brkTot" style="font-size:13px;font-weight:800;color:var(--tx)">00:00:00</div></div>';
   h+='</div></div>';
   h+='<div class="card" style="padding:12px 14px"><div class="row" style="gap:10px"><span style="font-size:17px">🕐</span><span style="font-size:14px;color:var(--tx);font-weight:600">Started '+shiftStartedAt+'</span></div></div>';
-  h+='<div class="card" style="padding:12px 14px"><div class="row" style="gap:10px"><span style="font-size:17px">💼</span><span id="t-job-label" style="font-size:14px;color:var(--tx)">'+(stopRegVal?'Registered Shift':'Unregistered Shift')+'</span></div></div>';
-  h+='<div class="card" style="padding:12px 14px"><div class="row" style="gap:10px"><span style="font-size:17px">📝</span><input id="shift-note-inp" value="'+shiftNote.replace(/"/g,'&quot;')+'" placeholder="Add notes..." onchange="shiftNote=this.value" style="background:transparent;border:none;outline:none;color:var(--tx);font-size:14px;flex:1;font-family:inherit"></div></div>';
+  h+='<div class="card" style="padding:12px 14px"><div class="row" style="gap:10px"><span style="font-size:17px">💼</span><span id="t-job-label" style="font-size:14px;color:var(--tx)">'+(stopRegVal?t('registered'):t('unregistered'))+' Shift</span></div></div>';
+  h+='<div class="card" style="padding:12px 14px"><div class="row" style="gap:10px"><span style="font-size:17px">📝</span><input id="shift-note-inp" value="'+shiftNote.replace(/"/g,'&quot;')+'" placeholder="Notes..." onchange="shiftNote=this.value" style="background:transparent;border:none;outline:none;color:var(--tx);font-size:14px;flex:1;font-family:inherit"></div></div>';
   h+='<div class="card" style="padding:10px 14px;background:var(--grnd);border-color:rgba(74,222,128,0.2)"><div class="row" style="justify-content:space-between"><span style="font-size:13px;color:var(--mu);font-weight:600">💸 Earning now</span><span id="t-earn" style="font-size:15px;font-weight:900;color:var(--grn)">+'+$c(0)+'</span></div></div>';
-  h+='<div class="reg-toggle"><button id="t-reg-btn" class="reg-btn '+(stopRegVal?'ar':'')+'" onclick="setTimerReg(true)">✅ Registered</button><button id="t-unreg-btn" class="reg-btn '+(!stopRegVal?'au':'')+'" onclick="setTimerReg(false)">⚠️ Unregistered</button></div>';
+  h+='<div class="reg-toggle"><button id="t-reg-btn" class="reg-btn '+(stopRegVal?'ar':'')+'" onclick="setTimerReg(true)">✅ '+t('registered')+'</button><button id="t-unreg-btn" class="reg-btn '+(!stopRegVal?'au':'')+'" onclick="setTimerReg(false)">⚠️ '+t('unregistered')+'</button></div>';
   h+='<div class="row" style="gap:8px;justify-content:center"><span style="font-size:12px;color:var(--mu);font-weight:600">⚡ Quick break:</span><button class="qb-btn" onclick="startBreak(15)">15m</button><button class="qb-btn" onclick="startBreak(30)">30m</button><button class="qb-btn" onclick="startBreak(45)">45m</button></div>';
-  h+='<button onclick="openPunchOut()" style="background:var(--red);border:none;border-radius:16px;padding:16px;width:100%;cursor:pointer;font-weight:800;font-size:15px;color:#fff;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px var(--redd)">⏹ Punch Out</button>';
-  h+='<button onclick="startBreak(null)" style="background:var(--card2);border:1px solid var(--bdr);border-radius:16px;padding:16px;width:100%;cursor:pointer;font-weight:800;font-size:15px;color:var(--tx);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px">⏸ Start Break</button>';
+  h+='<button onclick="openPunchOut()" style="background:var(--red);border:none;border-radius:16px;padding:16px;width:100%;cursor:pointer;font-weight:800;font-size:15px;color:#fff;font-family:inherit;box-shadow:0 4px 16px var(--redd)">⏹ '+t('punchOut')+'</button>';
+  h+='<button onclick="startBreak(null)" style="background:var(--card2);border:1px solid var(--bdr);border-radius:16px;padding:16px;width:100%;cursor:pointer;font-weight:800;font-size:15px;color:var(--tx);font-family:inherit">⏸ '+t('startBreak')+'</button>';
   h+='</div>';setContent(h);
 }
 function buildTimerBreak(){
@@ -768,13 +782,13 @@ function buildTimerBreak(){
   h+='<div style="width:1px;height:28px;background:rgba(255,255,255,0.1)"></div>';
   h+='<div style="text-align:center"><div style="font-size:10px;color:#A78BFA;margin-bottom:3px;font-weight:700">SHIFT SO FAR</div><div id="b-shiftSoFar" style="font-size:14px;font-weight:800;color:#EDE9FE">00:00:00</div></div>';
   h+='</div></div>';
-  h+='<button onclick="endBreak()" style="background:var(--A);border:none;border-radius:16px;padding:16px;width:100%;cursor:pointer;font-weight:800;font-size:15px;color:var(--At);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px">▶ End Break & Resume</button>';
-  h+='<button onclick="openPunchOut()" style="background:var(--redd);border:1px solid rgba(248,113,113,0.3);border-radius:16px;padding:16px;width:100%;cursor:pointer;font-weight:800;font-size:15px;color:var(--red);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px">⏹ Punch Out</button>';
+  h+='<button onclick="endBreak()" style="background:var(--A);border:none;border-radius:16px;padding:16px;width:100%;cursor:pointer;font-weight:800;font-size:15px;color:var(--At);font-family:inherit">▶ '+t('endBreak')+'</button>';
+  h+='<button onclick="openPunchOut()" style="background:var(--redd);border:1px solid rgba(248,113,113,0.3);border-radius:16px;padding:16px;width:100%;cursor:pointer;font-weight:800;font-size:15px;color:var(--red);font-family:inherit">⏹ '+t('punchOut')+'</button>';
   h+='</div>';setContent(h);
 }
-function setTimerReg(v){stopRegVal=v;var rb=document.getElementById('t-reg-btn'),ub=document.getElementById('t-unreg-btn'),jb=document.getElementById('t-job-label');if(rb)rb.className='reg-btn '+(v?'ar':'');if(ub)ub.className='reg-btn '+(!v?'au':'');if(jb)jb.textContent=v?'Registered Shift':'Unregistered Shift';updateTimerValues();}
+function setTimerReg(v){stopRegVal=v;var rb=document.getElementById('t-reg-btn'),ub=document.getElementById('t-unreg-btn'),jb=document.getElementById('t-job-label');if(rb)rb.className='reg-btn '+(v?'ar':'');if(ub)ub.className='reg-btn '+(!v?'au':'');if(jb)jb.textContent=(v?t('registered'):t('unregistered'))+' Shift';updateTimerValues();}
 
-// ─── NAVIGATION ───────────────────────────────────────────────
+// ─── NAVIGATION ────────────────────────────────────────────────
 function renderCurrent(){
   if(currentTab==='timer'){if(!timerTs&&!inBreak)buildTimerIdle();else if(inBreak)buildTimerBreak();else buildTimerRunning();}
   else if(currentTab==='dashboard')renderDashboard();
@@ -782,13 +796,13 @@ function renderCurrent(){
   else if(currentTab==='sheet')renderSheet();
   else renderAnalytics();
 }
-function switchTab(t){
-  currentTab=t;
-  ['timer','dashboard','shifts','sheet','analytics'].forEach(function(id){var el=document.getElementById('nav-'+id);if(el)el.className='nav-btn'+(id===t?' active':'');});
+function switchTab(tab){
+  currentTab=tab;
+  ['timer','dashboard','shifts','sheet','analytics'].forEach(function(id){var el=document.getElementById('nav-'+id);if(el)el.className='nav-btn'+(id===tab?' active':'');});
   renderCurrent();
 }
 
-// ─── DASHBOARD ────────────────────────────────────────────────
+// ─── DASHBOARD ─────────────────────────────────────────────────
 function renderDashboard(){
   var months=getMonths(),mE=getMonthEntries(selM),mEarn=earnDyn(mE);
   var taxDue=mEarn.tot*(cfg.tax/100),goalPct=Math.min(100,(mEarn.tot/cfg.goal)*100);
@@ -802,7 +816,7 @@ function renderDashboard(){
   h+='<div class="row" style="gap:6px"><button class="chevbtn" onclick="navMonth(-1)">‹</button><span style="font-size:13px;font-weight:700;color:var(--tx);min-width:64px;text-align:center">'+$ms(selM)+'</span><button class="chevbtn" onclick="navMonth(1)">›</button></div></div>';
   h+='<div class="card" style="padding:20px">';
   h+='<div style="font-size:10px;color:var(--mu);font-weight:700;letter-spacing:1px;margin-bottom:5px">GROSS EARNED</div>';
-  h+='<div class="row" style="justify-content:space-between;align-items:flex-end;margin-bottom:14px">';
+  h+='<div class="row" style="justify-content:space-between;align-items:flex-end;margin-bottom:10px">';
   h+='<div style="font-size:34px;font-weight:900;color:var(--tx);letter-spacing:-1.5px;line-height:1">'+$c(mEarn.tot)+'</div>';
   if(trend!==null)h+='<div style="padding:4px 10px;border-radius:99px;background:'+(trend>=0?'rgba(74,222,128,0.15)':'rgba(248,113,113,0.15)')+';color:'+(trend>=0?'var(--grn)':'var(--red)')+';font-size:12px;font-weight:800">'+(trend>=0?'↑':'↓')+Math.abs(trend)+'%</div>';
   h+='</div>';
@@ -810,16 +824,16 @@ function renderDashboard(){
   h+='<div class="row" style="justify-content:space-between;margin-bottom:6px"><span style="font-size:11px;color:var(--mu)">Goal · '+$c(cfg.goal)+'</span><span style="font-size:11px;font-weight:800;color:'+(goalPct>=100?'var(--A)':'var(--tx)')+'">'+goalPct.toFixed(0)+'%</span></div>';
   h+='<div style="height:8px;background:var(--dim);border-radius:99px;overflow:hidden"><div style="height:100%;width:'+goalPct+'%;border-radius:99px;background:linear-gradient(90deg,var(--A),#a3e635)"></div></div>';
   h+='<div style="font-size:11px;color:var(--mu);margin-top:6px;text-align:right">'+(goalPct>=100?'🎯 Goal smashed!':$c(cfg.goal-mEarn.tot)+' to go')+'</div></div>';
-  var tiles=[{ico:'⏱',l:'HOURS',v:$h(totalH),s:mE.length+' shifts'},{ico:'✅',l:'REGISTERED',v:$c(mEarn.rE),s:$h(mEarn.rH)},{ico:'⚠️',l:'UNREGISTERED',v:$c(mEarn.uE),s:$h(mEarn.uH)},{ico:'📊',l:'TAX SET-ASIDE',v:$c(taxDue),s:cfg.tax+'% rate'}];
+  var tiles=[{ico:'⏱',l:'HOURS',v:$h(totalH),s:mE.length+' shifts'},{ico:'✅',l:'REGISTERED',v:$c(mEarn.rE),s:$h(mEarn.rH)},{ico:'⚠️',l:'UNREGISTERED',v:$c(mEarn.uE),s:$h(mEarn.uH)},{ico:'📊',l:'TAX SET-ASIDE',v:$c(taxDue),s:cfg.tax+'%'}];
   h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
-  tiles.forEach(function(t){h+='<div class="card" style="padding:15px"><div class="row" style="gap:7px;margin-bottom:9px"><span style="font-size:15px">'+t.ico+'</span><span style="font-size:9px;color:var(--mu);font-weight:700;letter-spacing:0.7px">'+t.l+'</span></div><div style="font-size:17px;font-weight:800;color:var(--tx)">'+t.v+'</div><div style="font-size:11px;color:var(--mu);margin-top:4px">'+t.s+'</div></div>';});
+  tiles.forEach(function(tile){h+='<div class="card" style="padding:15px"><div class="row" style="gap:7px;margin-bottom:9px"><span style="font-size:15px">'+tile.ico+'</span><span style="font-size:9px;color:var(--mu);font-weight:700;letter-spacing:0.7px">'+tile.l+'</span></div><div style="font-size:17px;font-weight:800;color:var(--tx)">'+tile.v+'</div><div style="font-size:11px;color:var(--mu);margin-top:4px">'+tile.s+'</div></div>';});
   h+='</div>';
   h+='<div class="card" style="padding:16px"><div style="font-size:11px;color:var(--mu);font-weight:700;letter-spacing:1px;margin-bottom:12px">✨ ALL-TIME</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">';
   [{l:'Earned',v:$c(allE.tot)},{l:'Hours',v:$h(allH)},{l:'Shifts',v:entries.length}].forEach(function(x){h+='<div style="text-align:center;background:var(--dim);border-radius:12px;padding:12px 4px"><div style="font-size:13px;font-weight:800;color:var(--tx)">'+x.v+'</div><div style="font-size:10px;color:var(--mu);margin-top:3px">'+x.l+'</div></div>';});
   h+='</div></div></div>';setContent(h);
 }
 
-// ─── SHIFTS ───────────────────────────────────────────────────
+// ─── SHIFTS ────────────────────────────────────────────────────
 function renderShifts(){
   var mE=getMonthEntries(selM),mEarn=earnDyn(mE);
   var sorted=mE.slice().sort(function(a,b){return b.date.localeCompare(a.date);});
@@ -829,7 +843,7 @@ function renderShifts(){
   h+='<div class="row" style="gap:6px"><button class="chevbtn" onclick="navMonth(-1)">‹</button><span style="font-size:14px;font-weight:700;color:var(--tx)">'+$m(selM)+'</span><button class="chevbtn" onclick="navMonth(1)">›</button></div>';
   h+='<button onclick="openAddShift()" style="background:var(--A);border:none;border-radius:10px;padding:7px 14px;color:var(--At);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">＋ Add</button></div>';
   h+='<div class="row" style="gap:8px">';
-  [{l:'Gross',v:$c(mEarn.tot)},{l:'Hours',v:$h(totalH)},{l:'Shifts',v:mE.length}].forEach(function(x){h+='<div class="card" style="flex:1;padding:11px 8px;text-align:center"><div style="font-size:13px;font-weight:800;color:var(--tx)">'+x.v+'</div><div style="font-size:10px;color:var(--mu);margin-top:3px">'+x.l+'</div></div>';});
+  [{l:t('gross'),v:$c(mEarn.tot)},{l:t('hours'),v:$h(totalH)},{l:t('shifts'),v:mE.length}].forEach(function(x){h+='<div class="card" style="flex:1;padding:11px 8px;text-align:center"><div style="font-size:13px;font-weight:800;color:var(--tx)">'+x.v+'</div><div style="font-size:10px;color:var(--mu);margin-top:3px">'+x.l+'</div></div>';});
   h+='</div>';
   if(!sorted.length){h+='<div class="card" style="text-align:center;padding:46px"><div style="font-size:32px;margin-bottom:10px">📭</div><div style="color:var(--mu)">No shifts for '+$m(selM)+'</div></div>';}
   else sorted.forEach(function(e){
@@ -844,12 +858,10 @@ function renderShifts(){
   h+='</div>';setContent(h);
 }
 
-// ─── TIMESHEET ────────────────────────────────────────────────
+// ─── TIMESHEET ─────────────────────────────────────────────────
 function renderSheet(){
   var mE=getMonthEntries(selM).slice().sort(function(a,b){return a.date.localeCompare(b.date);});
-  var mEarn=earnDyn(mE);
-  var totalH=mE.reduce(function(s,e){return s+e.hours;},0);
-  var totalB=mE.reduce(function(s,e){return s+e.breakH;},0);
+  var mEarn=earnDyn(mE),totalH=mE.reduce(function(s,e){return s+e.hours;},0),totalB=mE.reduce(function(s,e){return s+e.breakH;},0);
   var h='<div class="anim" style="display:flex;flex-direction:column;gap:14px">';
   h+='<div class="row" style="justify-content:space-between;align-items:center">';
   h+='<div class="row" style="gap:6px"><button class="chevbtn" onclick="navMonth(-1)">‹</button><span style="font-size:15px;font-weight:700;color:var(--tx)">'+$m(selM)+'</span><button class="chevbtn" onclick="navMonth(1)">›</button></div>';
@@ -863,18 +875,13 @@ function renderSheet(){
   h+='<div class="card" style="padding:0;overflow:hidden">';
   if(!mE.length){h+='<div style="text-align:center;padding:44px;color:var(--mu)">📭 No entries</div>';}
   else{
-    h+='<div style="overflow-x:auto"><table class="tsheet-table">';
-    h+='<thead><tr><th>Date</th><th>Start</th><th>End</th><th>Break</th><th>Hrs</th><th>Type</th><th style="text-align:right">Pay</th></tr></thead><tbody>';
+    h+='<div style="overflow-x:auto"><table class="tsheet-table"><thead><tr><th>Date</th><th>Start</th><th>End</th><th>Break</th><th>Hrs</th><th>Type</th><th style="text-align:right">Pay</th></tr></thead><tbody>';
     var rTot=0,uTot=0,hTot=0;
     mE.forEach(function(e){
       var pay=+(e.hours*(e.reg?cfg.regRate:cfg.unregRate)).toFixed(2);
       rTot+=e.reg?pay:0;uTot+=e.reg?0:pay;hTot+=e.hours;
       var dt=new Date(e.date+'T12:00').toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit'});
-      h+='<tr onclick="openEdit(\''+e.id+'\')" style="cursor:pointer">';
-      h+='<td style="font-weight:600">'+dt+'</td><td>'+e.start+'</td><td>'+e.end+'</td>';
-      h+='<td>'+$b(e.breakH)+'</td><td style="font-weight:700">'+$h(e.hours)+'</td>';
-      h+='<td><span class="pill '+(e.reg?'pill-r':'pill-u')+'">'+(e.reg?'R':'U')+'</span></td>';
-      h+='<td style="text-align:right;font-weight:700;color:'+(e.reg?'var(--A)':'var(--yel)')+'">'+$c(pay)+'</td></tr>';
+      h+='<tr onclick="openEdit(\''+e.id+'\')" style="cursor:pointer"><td style="font-weight:600">'+dt+'</td><td>'+e.start+'</td><td>'+e.end+'</td><td>'+$b(e.breakH)+'</td><td style="font-weight:700">'+$h(e.hours)+'</td><td><span class="pill '+(e.reg?'pill-r':'pill-u')+'">'+(e.reg?'R':'U')+'</span></td><td style="text-align:right;font-weight:700;color:'+(e.reg?'var(--A)':'var(--yel)')+'">'+$c(pay)+'</td></tr>';
     });
     h+='<tr class="tot-row"><td colspan="4" style="font-weight:800">TOTAL</td><td style="font-weight:800">'+$h(hTot)+'</td><td></td><td style="text-align:right">'+$c(rTot+uTot)+'</td></tr>';
     h+='</tbody></table></div>';
@@ -882,10 +889,9 @@ function renderSheet(){
   h+='</div></div>';setContent(h);
 }
 
-// ─── ANALYTICS ────────────────────────────────────────────────
+// ─── ANALYTICS ─────────────────────────────────────────────────
 function renderAnalytics(){
-  var data=monthDataArr();
-  var maxE=Math.max.apply(null,data.map(function(m){return m.earn;}).concat([1]));
+  var data=monthDataArr(),maxE=Math.max.apply(null,data.map(function(m){return m.earn;}).concat([1]));
   var avgE=data.length?data.reduce(function(s,m){return s+m.earn;},0)/data.length:0;
   var best=data.reduce(function(b,m){return m.earn>(b?b.earn:0)?m:b;},null);
   var h='<div class="anim" style="display:flex;flex-direction:column;gap:14px">';
@@ -903,7 +909,7 @@ function renderAnalytics(){
   h+='</div></div>';setContent(h);
 }
 
-// ─── ADD SHIFT ────────────────────────────────────────────────
+// ─── ADD SHIFT ──────────────────────────────────────────────────
 function openAddShift(){asReg=true;document.getElementById('as-date').value=tod();document.getElementById('as-start').value='09:00';document.getElementById('as-end').value='17:00';document.getElementById('as-break').value='0';document.getElementById('as-notes').value='';updateASToggle();document.getElementById('modal-addshift').classList.remove('hidden');}
 function setASReg(v){asReg=v;updateASToggle();}
 function updateASToggle(){document.getElementById('as-reg-btn').className='reg-btn '+(asReg?'ar':'');document.getElementById('as-unreg-btn').className='reg-btn '+(!asReg?'au':'');}
@@ -918,7 +924,7 @@ function saveShift(){
   toast('✅ '+$h(hrs)+' added');renderCurrent();triggerSave();
 }
 
-// ─── EDIT ─────────────────────────────────────────────────────
+// ─── EDIT ───────────────────────────────────────────────────────
 function openEdit(id){var e=entries.find(function(x){return x.id===id;});if(!e)return;editingId=id;edReg=e.reg;document.getElementById('ed-date').value=e.date;document.getElementById('ed-start').value=e.start==='--'?'':e.start;document.getElementById('ed-end').value=e.end==='--'?'':e.end;document.getElementById('ed-break').value=Math.round(e.breakH*60);document.getElementById('ed-notes').value=e.notes;updateEDToggle();document.getElementById('modal-edit').classList.remove('hidden');}
 function setEDReg(v){edReg=v;updateEDToggle();}
 function updateEDToggle(){document.getElementById('ed-reg-btn').className='reg-btn '+(edReg?'ar':'');document.getElementById('ed-unreg-btn').className='reg-btn '+(!edReg?'au':'');}
@@ -933,13 +939,14 @@ function saveEdit(){
 function askDelete(){document.getElementById('modal-edit').classList.add('hidden');document.getElementById('modal-delete').classList.remove('hidden');}
 function confirmDelete(){entries=entries.filter(function(x){return x.id!==editingId;});document.getElementById('modal-delete').classList.add('hidden');toast('🗑 Deleted');renderCurrent();triggerSave();}
 
-// ─── SETTINGS ─────────────────────────────────────────────────
+// ─── SETTINGS ───────────────────────────────────────────────────
 function openSettings(){
   document.getElementById('cfg-curr').value=cfg.currency;
   document.getElementById('cfg-reg').value=cfg.regRate;
   document.getElementById('cfg-unreg').value=cfg.unregRate;
   document.getElementById('cfg-tax').value=cfg.tax;
   document.getElementById('cfg-goal').value=cfg.goal;
+  document.getElementById('cfg-lang').value=cfg.lang||'en';
   updateThemeUI();setAccent(accentKey);updateSettingsUI();
   document.getElementById('modal-settings').classList.remove('hidden');
 }
@@ -949,26 +956,44 @@ function saveSettings(){
   cfg.unregRate=+(document.getElementById('cfg-unreg').value)||7;
   var tv=document.getElementById('cfg-tax').value;cfg.tax=tv===''?0:Math.max(0,+tv);
   cfg.goal=+(document.getElementById('cfg-goal').value)||1400;
+  cfg.lang=document.getElementById('cfg-lang').value||'en';
   document.getElementById('modal-settings').classList.add('hidden');
-  toast('✅ Settings saved');renderCurrent();triggerSave();
+  toast('✅ Settings saved');updateHeader();renderCurrent();triggerSave();
 }
 function openResetConfirm(){document.getElementById('modal-settings').classList.add('hidden');document.getElementById('modal-reset').classList.remove('hidden');}
 function confirmReset(){
-  entries=[];gFileId=null;
-  selM=new Date().toISOString().slice(0,7);
+  entries=[];gFileId=null;selM=new Date().toISOString().slice(0,7);
   document.getElementById('modal-reset').classList.add('hidden');
   toast('🗑️ All data reset');renderCurrent();triggerSave();
 }
 
-// ─── BACKUP ───────────────────────────────────────────────────
+// ─── BACKUP (FIXED) ─────────────────────────────────────────────
 function downloadBackup(){
-  var data={version:2,exported:new Date().toISOString(),cfg:cfg,entries:entries,theme:{isDark:isDark,accentKey:accentKey}};
-  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;a.download='TiMMing_Backup_'+new Date().toISOString().slice(0,10)+'.json';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(url);toast('💾 Backup downloaded!');
+  try{
+    var data={version:2,exported:new Date().toISOString(),cfg:cfg,entries:entries,theme:{isDark:isDark,accentKey:accentKey}};
+    var json=JSON.stringify(data,null,2);
+    var blob=new Blob([json],{type:'application/json;charset=utf-8'});
+    var fname='TiMMing_Backup_'+new Date().toISOString().slice(0,10)+'.json';
+    // Method 1: createObjectURL
+    if(window.URL&&window.URL.createObjectURL){
+      var url=window.URL.createObjectURL(blob);
+      var a=document.createElement('a');
+      a.href=url;a.download=fname;a.style.display='none';
+      document.body.appendChild(a);a.click();
+      setTimeout(function(){document.body.removeChild(a);window.URL.revokeObjectURL(url);},1000);
+      toast('💾 Backup downloaded!');
+    } else {
+      // Method 2: data URI fallback (for older browsers)
+      var reader=new FileReader();
+      reader.onload=function(ev){
+        var a2=document.createElement('a');
+        a2.href=ev.target.result;a2.download=fname;a2.style.display='none';
+        document.body.appendChild(a2);a2.click();document.body.removeChild(a2);
+        toast('💾 Backup downloaded!');
+      };
+      reader.readAsDataURL(blob);
+    }
+  }catch(err){toast('Download failed: '+err.message,'err');}
 }
 function handleRestore(input){
   var file=input.files[0];if(!file)return;
@@ -976,23 +1001,22 @@ function handleRestore(input){
   reader.onload=function(ev){
     try{
       var data=JSON.parse(ev.target.result);
-      if(!data.entries||!Array.isArray(data.entries))throw new Error('Invalid');
+      if(!data.entries||!Array.isArray(data.entries))throw new Error('Invalid file');
       entries=data.entries;
       if(data.cfg)cfg=Object.assign(cfg,data.cfg);
       if(gUser)cfg.name=gUser.given_name||gUser.name||cfg.name;
       if(data.theme){if(typeof data.theme.isDark!=='undefined'){isDark=data.theme.isDark;document.documentElement.setAttribute('data-dark',isDark?'1':'0');}if(data.theme.accentKey)setAccent(data.theme.accentKey);}
       selM=getMonths()[0]||new Date().toISOString().slice(0,7);
       document.getElementById('modal-settings').classList.add('hidden');
-      toast('✅ '+entries.length+' shifts restored!');renderCurrent();triggerSave();
-    }catch(err){toast('❌ Invalid file','err');}
+      toast('✅ '+entries.length+' shifts restored!');updateHeader();renderCurrent();triggerSave();
+    }catch(err){toast('❌ Invalid backup file','err');}
     input.value='';
   };
   reader.readAsText(file);
 }
 
-// ─── INIT ─────────────────────────────────────────────────────
+// ─── INIT ───────────────────────────────────────────────────────
 updateThemeUI();
-// App starts on login screen — nothing else to init
 </script>
 </body>
 </html>
