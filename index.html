@@ -553,36 +553,78 @@ function updateHeader(){
 function startGoogleLogin(){
   var btn=document.getElementById('signin-btn'),loading=document.getElementById('login-loading'),errEl=document.getElementById('login-error');
   btn.style.display='none';loading.classList.remove('hidden');errEl.classList.add('hidden');
-  waitForGSI(function(){
-    try{
-      var client=google.accounts.oauth2.initTokenClient({
-        client_id:GCI,scope:'openid profile email '+GSCOPE,
-        callback:function(resp){
-          if(resp&&resp.access_token){
-            gToken=resp.access_token;fetchGoogleProfile(gToken);
-          }else{showLoginError('Sign in cancelled. Please try again.');resetLoginBtn();}
-        },
-        error_callback:function(e){
-          showLoginError('Sign in failed. Please try again.');resetLoginBtn();
-        }
-      });
-      client.requestAccessToken({prompt:'select_account'});
-    }catch(e){
-      showLoginError('Sign in failed. Please try again.');resetLoginBtn();
-    }
-  });
+  // Use direct OAuth2 implicit flow — works on ALL devices, no GSI needed
+  doOAuthFlow();
 }
 
-function waitForGSI(cb,attempts){
-  attempts=attempts||0;
-  if(typeof google!=='undefined'&&google.accounts&&google.accounts.oauth2){
-    cb();
-  } else if(attempts<20){
-    setTimeout(function(){waitForGSI(cb,attempts+1);},300);
-  } else {
-    showLoginError('Google services not loaded. Check internet and refresh page.');
-    resetLoginBtn();
+function doOAuthFlow(){
+  var redirectUri=location.origin+location.pathname;
+  // Remove trailing slash issues
+  if(redirectUri.endsWith('/'))redirectUri=redirectUri;
+  else redirectUri=redirectUri+'/';
+  // Build OAuth URL
+  var params=[
+    'client_id='+encodeURIComponent(GCI),
+    'redirect_uri='+encodeURIComponent(redirectUri),
+    'response_type=token',
+    'scope='+encodeURIComponent('openid profile email '+GSCOPE),
+    'prompt=select_account',
+    'include_granted_scopes=true'
+  ].join('&');
+  var oauthUrl='https://accounts.google.com/o/oauth2/v2/auth?'+params;
+  // Open popup
+  var w=480,h=620;
+  var left=Math.max(0,(screen.width-w)/2);
+  var top=Math.max(0,(screen.height-h)/2);
+  var popup=window.open(oauthUrl,'googleauth','width='+w+',height='+h+',left='+left+',top='+top+',scrollbars=yes');
+  if(!popup||popup.closed){
+    // Popup blocked — redirect same tab (mobile fallback)
+    sessionStorage.setItem('timming_oauth_redirect','1');
+    window.location.href=oauthUrl.replace('redirect_uri='+encodeURIComponent(redirectUri),'redirect_uri='+encodeURIComponent(redirectUri));
+    return;
   }
+  // Poll popup for token
+  var pollTimer=setInterval(function(){
+    if(!popup||popup.closed){
+      clearInterval(pollTimer);
+      resetLoginBtn();
+      return;
+    }
+    try{
+      var url=popup.location.href;
+      if(url&&(url.includes('access_token')||url.includes('#'))){
+        var hash=url.split('#')[1]||url.split('?')[1]||'';
+        var params2=new URLSearchParams(hash);
+        var token=params2.get('access_token');
+        if(token){
+          clearInterval(pollTimer);
+          popup.close();
+          gToken=token;
+          fetchGoogleProfile(token);
+        }
+      }
+    }catch(e){/* cross-origin, keep polling */}
+  },400);
+}
+
+// Check if we're returning from OAuth redirect (mobile fallback)
+function checkOAuthReturn(){
+  var hash=window.location.hash||window.location.search;
+  if(hash&&hash.includes('access_token')){
+    var params=new URLSearchParams(hash.replace('#','').replace('?',''));
+    var token=params.get('access_token');
+    if(token){
+      // Clean URL
+      history.replaceState(null,null,location.pathname);
+      // Show loading
+      document.getElementById('signin-btn').style.display='none';
+      document.getElementById('login-loading').classList.remove('hidden');
+      gToken=token;
+      fetchGoogleProfile(token);
+      return true;
+    }
+  }
+  return false;
 }
 function fetchGoogleProfile(token){
   fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{'Authorization':'Bearer '+token}})
