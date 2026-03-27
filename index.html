@@ -551,18 +551,11 @@ function updateHeader(){
 
 // ─── LOGIN FLOW ────────────────────────────────────────────────
 function startGoogleLogin(){
-  var btn=document.getElementById('signin-btn'),loading=document.getElementById('login-loading'),errEl=document.getElementById('login-error');
-  btn.style.display='none';loading.classList.remove('hidden');errEl.classList.add('hidden');
-  // Use direct OAuth2 implicit flow — works on ALL devices, no GSI needed
-  doOAuthFlow();
-}
-
-function doOAuthFlow(){
-  var redirectUri=location.origin+location.pathname;
-  // Remove trailing slash issues
-  if(redirectUri.endsWith('/'))redirectUri=redirectUri;
-  else redirectUri=redirectUri+'/';
-  // Build OAuth URL
+  // REDIRECT FLOW — works on ALL devices including mobile
+  // Save current state hint
+  sessionStorage.setItem('timming_signing_in','1');
+  // Build redirect URI — must exactly match Google Console
+  var redirectUri='https://synerobusiness-design.github.io/TiMMing/';
   var params=[
     'client_id='+encodeURIComponent(GCI),
     'redirect_uri='+encodeURIComponent(redirectUri),
@@ -571,54 +564,23 @@ function doOAuthFlow(){
     'prompt=select_account',
     'include_granted_scopes=true'
   ].join('&');
-  var oauthUrl='https://accounts.google.com/o/oauth2/v2/auth?'+params;
-  // Open popup
-  var w=480,h=620;
-  var left=Math.max(0,(screen.width-w)/2);
-  var top=Math.max(0,(screen.height-h)/2);
-  var popup=window.open(oauthUrl,'googleauth','width='+w+',height='+h+',left='+left+',top='+top+',scrollbars=yes');
-  if(!popup||popup.closed){
-    // Popup blocked — redirect same tab (mobile fallback)
-    sessionStorage.setItem('timming_oauth_redirect','1');
-    window.location.href=oauthUrl.replace('redirect_uri='+encodeURIComponent(redirectUri),'redirect_uri='+encodeURIComponent(redirectUri));
-    return;
-  }
-  // Poll popup for token
-  var pollTimer=setInterval(function(){
-    if(!popup||popup.closed){
-      clearInterval(pollTimer);
-      resetLoginBtn();
-      return;
-    }
-    try{
-      var url=popup.location.href;
-      if(url&&(url.includes('access_token')||url.includes('#'))){
-        var hash=url.split('#')[1]||url.split('?')[1]||'';
-        var params2=new URLSearchParams(hash);
-        var token=params2.get('access_token');
-        if(token){
-          clearInterval(pollTimer);
-          popup.close();
-          gToken=token;
-          fetchGoogleProfile(token);
-        }
-      }
-    }catch(e){/* cross-origin, keep polling */}
-  },400);
+  window.location.href='https://accounts.google.com/o/oauth2/v2/auth?'+params;
 }
 
-// Check if we're returning from OAuth redirect (mobile fallback)
+// Called on page load — checks if returning from Google OAuth
 function checkOAuthReturn(){
-  var hash=window.location.hash||window.location.search;
+  var hash=window.location.hash;
   if(hash&&hash.includes('access_token')){
-    var params=new URLSearchParams(hash.replace('#','').replace('?',''));
+    var params=new URLSearchParams(hash.substring(1));
     var token=params.get('access_token');
     if(token){
-      // Clean URL
       history.replaceState(null,null,location.pathname);
-      // Show loading
-      document.getElementById('signin-btn').style.display='none';
-      document.getElementById('login-loading').classList.remove('hidden');
+      sessionStorage.removeItem('timming_signing_in');
+      // Show loading state on login screen while we fetch profile
+      var btn=document.getElementById('signin-btn');
+      var loading=document.getElementById('login-loading');
+      if(btn)btn.style.display='none';
+      if(loading)loading.classList.remove('hidden');
       gToken=token;
       fetchGoogleProfile(token);
       return true;
